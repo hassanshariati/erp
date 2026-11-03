@@ -1,0 +1,42 @@
+services:
+  configurator:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  backend:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  frontend:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+    environment:
+      FRAPPE_SITE_NAME_HEADER: armember.ir
+  websocket:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  queue-short:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  queue-long:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  scheduler:
+    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
+    pull_policy: never
+  caddy:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+volumes:
+  caddy-data:
+  caddy-config:

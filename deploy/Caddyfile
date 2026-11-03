@@ -1,0 +1,7 @@
+{
+ email {$ACME_EMAIL}
+}
+armember.ir {
+ encode zstd gzip
+ reverse_proxy frontend:8080
+}
