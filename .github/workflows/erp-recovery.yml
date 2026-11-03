@@ -24,6 +24,19 @@ jobs:
         shell: bash
         run: |
           set -u
+          echo '=== Runner Docker access preflight ==='
+          id
+          stat -c 'Docker socket: %U:%G mode=%a' /var/run/docker.sock || true
+          if docker info >/dev/null 2>&1; then
+            echo 'Docker access: direct'
+          elif sudo -n docker info >/dev/null 2>&1; then
+            echo 'Docker access: sudo without prompt'
+            docker() { sudo -n command docker "$@"; }
+          else
+            echo 'BLOCKED: runner lacks Docker socket access and noninteractive sudo'
+            exit 1
+          fi
+
           echo '=== Runtime (read-only) ==='
           docker ps --format 'table {{.Names}}\t{{.Status}}' | grep -E 'NAMES|deploy-(backend|frontend|db|caddy)-1' || true
 
