@@ -1,0 +1,84 @@
+name: ERPNext database recovery diagnostics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/erp-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: erpnext-recovery-diagnostics
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    name: Read-only live ERP database checks
+    runs-on: [self-hosted, linux, x64, erpnext-deploy]
+    timeout-minutes: 10
+    steps:
+      - name: Check container and database state without changing data
+        shell: bash
+        run: |
+          set -u
+          echo '=== Runtime (read-only) ==='
+          docker ps --format 'table {{.Names}}\t{{.Status}}' | grep -E 'NAMES|deploy-(backend|frontend|db|caddy)-1' || true
+
+          echo '=== Backend: site configuration and application login test ==='
+          docker exec -i deploy-backend-1 python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          base = Path("/home/frappe/frappe-bench/sites")
+          common = base / "common_site_config.json"
+          common_cfg = json.loads(common.read_text()) if common.exists() else {}
+          sites = sorted(base.glob("*/site_config.json"))
+          print("Site configs found:", len(sites))
+          try:
+              import MySQLdb
+          except ImportError as exc:
+              print("MySQLdb module unavailable:", type(exc).__name__)
+              raise SystemExit(0)
+          for path in sites:
+              try:
+                  cfg = json.loads(path.read_text())
+                  name = cfg.get("db_name")
+                  username = cfg.get("db_user") or name
+                  hostname = cfg.get("db_host") or common_cfg.get("db_host") or "db"
+                  port = int(cfg.get("db_port") or common_cfg.get("db_port") or 3306)
+                  password = cfg.get("db_password")
+                  print("Site:", path.parent.name)
+                  print("DB:", name, "User:", username, "Host:", hostname, "Port:", port)
+                  print("Site database password configured:", bool(password))
+                  if not (name and username and password):
+                      print("App DB auth: MISSING_CONFIG")
+                      continue
+                  try:
+                      con = MySQLdb.connect(host=hostname, port=port, user=username, passwd=password, db=name, connect_timeout=6)
+                      con.close()
+                      print("App DB auth: OK")
+                  except Exception as exc:
+                      code = exc.args[0] if getattr(exc, "args", None) else type(exc).__name__
+                      print("App DB auth: ERROR", code, type(exc).__name__)
+              except Exception as exc:
+                  print("Site config/read error:", type(exc).__name__)
+          PY
+
+          echo '=== MariaDB root authentication and site-account metadata ==='
+          docker exec deploy-db-1 sh -c '
+            if [ ! -r /run/secrets/db_root_password ]; then
+              echo "DB root secret: missing/unreadable"
+              exit 0
+            fi
+            export MYSQL_PWD="$(cat /run/secrets/db_root_password)"
+            if mariadb -uroot -N -e "SELECT 1" >/dev/null 2>&1; then
+              echo "DB root authentication: OK"
+              mariadb -uroot -N -e "SELECT CONCAT(\"DATABASE_FOUND=\",COUNT(*)) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=\"_8d8877e7c7a80d3d\"; SELECT CONCAT(\"ACCOUNT_HOST=\",Host,\" PLUGIN=\",plugin) FROM mysql.user WHERE User=\"_8d8877e7c7a80d3d\";"
+            else
+              echo "DB root authentication: FAILED"
+            fi
+          ' || echo 'MariaDB inspection failed (see above)'
+          echo '=== End of read-only checks ==='
