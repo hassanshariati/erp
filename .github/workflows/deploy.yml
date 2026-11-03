@@ -1,23 +1,39 @@
 name: Deploy ERPNext
+
+# Production changes are manual until the dedicated ERP runner has been secured and tested.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "deploy/**"
-      - ".github/workflows/deploy.yml"
+
 permissions:
   contents: read
+
 concurrency:
   group: erpnext-production
   cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45
     steps:
+      - name: Checkout selected revision
+        uses: actions/checkout@v4
+
+      - name: Verify dedicated runner and Docker permissions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ! docker info >/dev/null 2>&1; then
+            echo "ERP runner cannot access Docker. Give gha-erp controlled Docker access on the host and restart its runner service." >&2
+            exit 1
+          fi
+          test -f /opt/erp/deploy/.env || { echo "Missing server-side deployment configuration" >&2; exit 1; }
+          test -s /opt/erp/deploy/secrets/db_root_password || { echo "Missing DB root secret" >&2; exit 1; }
+          test -s /opt/erp/deploy/secrets/admin_password || { echo "Missing ERP admin secret" >&2; exit 1; }
+
       - name: Deploy checked out revision
+        shell: bash
         env:
           DEPLOY_SHA: ${{ github.sha }}
-        run: /opt/erp/deploy/scripts/ci-deploy.sh "$DEPLOY_SHA"
+        run: bash deploy/scripts/ci-deploy.sh "$DEPLOY_SHA"
