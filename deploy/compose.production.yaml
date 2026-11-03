@@ -1,0 +1,60 @@
+# Extend the official frappe_docker compose.yaml; local-only HTTP until a domain/TLS is configured.
+services:
+  configurator:
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      REDIS_CACHE: redis-cache:6379
+      REDIS_QUEUE: redis-queue:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+  backend:
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+  frontend:
+    environment:
+      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:-erp.local}
+    ports:
+      - "127.0.0.1:8080:8080"
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --innodb-snapshot-isolation=OFF
+    environment:
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    secrets:
+      - db_root_password
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    volumes:
+      - db-data:/var/lib/mysql
+  redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+  redis-queue:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-queue-data:/data
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password
+volumes:
+  db-data:
+  redis-queue-data:
