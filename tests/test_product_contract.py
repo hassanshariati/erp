@@ -51,6 +51,7 @@ class GenericProductContractTests(unittest.TestCase):
         }
         self.assertEqual("bisness_core", values["app_name"])
         self.assertEqual(["erpnext", "hrms", "erpnext_iran"], values["required_apps"])
+        self.assertTrue((APP / "bisness_core" / "bisness_core" / "__init__.py").is_file())
 
     def test_external_app_source_refs_are_reviewed(self) -> None:
         """Changing a pinned commit without review must break this test."""
