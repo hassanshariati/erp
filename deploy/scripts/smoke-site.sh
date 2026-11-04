@@ -20,10 +20,17 @@ command -v curl >/dev/null || { echo "curl is required for HTTP smoke."; exit 2;
 curl --fail --silent --show-error --max-time 15 \
   --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/api/method/ping" >/dev/null
-# Check that SPA routes are served from the same site (no separate tenant).
+# Both SPAs restrict unauthenticated visitors. CRM normally returns 403
+# to Guest; a 404 or 5xx is a real route/asset/server failure.
 for path in crm insights; do
-  curl --fail --silent --show-error --max-time 15 \
+  response_code="$(curl --silent --show-error --max-time 15 \
     --retry 12 --retry-delay 5 --retry-connrefused \
-    -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/$path" >/dev/null
+    --output /dev/null --write-out '%{http_code}' \
+    -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/$path")"
+  echo "/$path unauthenticated HTTP $response_code"
+  case "$response_code" in
+    200|301|302|303|401|403) ;;
+    *) echo "Unexpected route response for /$path: $response_code" >&2; exit 1 ;;
+  esac
 done
-echo "Six-app site, CRM/Insights routes, and private HTTP smoke checks passed."
+echo "Six-app site, protected CRM/Insights routes and private HTTP smoke checks passed."
