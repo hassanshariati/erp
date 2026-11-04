@@ -1,3 +1,10 @@
 .env
 secrets/
 backups/
+
+# Local Graphify runtime and generated cache (keep shareable graph files available)
+.graphify-venv/
+graphify-out/cache/
+graphify-out/.graphify_*
+graphify-out/manifest.json
+graphify-out/cost.json

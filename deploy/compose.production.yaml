@@ -1,4 +1,4 @@
-# Extend the official frappe_docker compose.yaml; local-only HTTP until a domain/TLS is configured.
+# ERPNext stack: private loopback HTTP, no public listener.
 services:
   configurator:
     environment:
@@ -21,9 +21,9 @@ services:
         condition: service_healthy
   frontend:
     environment:
-      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:-erp.local}
+      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:?Set SITE_NAME in .env}
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:${HOST_HTTP_PORT:-18080}:8080"
   db:
     image: mariadb:11.8
     restart: unless-stopped

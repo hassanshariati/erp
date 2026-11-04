@@ -1,21 +1,22 @@
-# armember.ir deployment — Ubuntu VPS
+# Production release gate — customer-independent
 
-Target: 94.184.27.131. This repository prepares files only; no remote execution or SSL issuance has been verified.
+No production release is approved by the existence of these deployment files.
 
-Requirements: Ubuntu x86_64, Docker Engine + Compose v2, adequate RAM/disk, DNS A record armember.ir pointing to 94.184.27.131, reachable TCP 80/443, and no competing listener on those ports. Verify DNS with dig. Do not expose database, Redis or port 8080; frontend's port 8080 is loopback-only.
+## Per-instance inputs
 
-On the VPS:
+- `SITE_NAME`, `CUSTOM_IMAGE`, `CUSTOM_TAG`, `HOST_HTTP_PORT` in a private `deploy/.env`.
+- DB/admin secrets generated outside Git; encryption, retention and restore test for offsite backups.
+- External DNS, domain ownership, TLS/ACME mailbox and reverse-proxy topology.
+- The legal companies, banks, tax rules, roles and approval matrices configured as site data after customer sign-off.
 
-    git clone https://github.com/hassanshariati/erp.git
-    cd erp/deploy
-    cp .env.example .env
-    nano .env
-    bash scripts/initialize.sh
+## Required verification
 
-Set ACME_EMAIL to an email you actually control before running. Caddy will request and renew HTTPS certificates automatically only after DNS and firewall conditions are met. Verify using curl -I https://armember.ir and check docker compose logs caddy.
+1. Build/pin a custom image and inspect its software bill of materials and dependencies. The current pins are version/SHA references, not accepted registry digests.
+2. Install the four apps on a **disposable** ERPNext v16 site. Record exact versions, migrations and a smoke test for HRMS and `erpnext_iran`.
+3. Validate account boundaries, access controls and backups before collecting live company or employee data.
+4. Verify Iranian statutory tax and insurance calculations with accountable specialists, and Moadian API workflows with authorized test credentials.
+5. Confirm business procedures and contracts. A customer RFP is a requirement input, not an automatic product feature.
+6. Plan the HTTPS listener around current host port users. Never expose DB/Redis or private HTTP ports.
+7. For upgrades to sites that already exist, use a separately reviewed backup + migration + rollback procedure. `scripts/initialize.sh` is **new-site-only**.
 
-The Dockerfile builds a locally tagged image FROM the official pinned ERPNext image; it does not compile Frappe from source. Source is tracked separately as a submodule.
-
-Secrets are generated locally in deploy/secrets. Administrator password is in deploy/secrets/admin_password on the VPS. Never commit or send secrets or SSH private keys. The supplied id_ed25519.pub is a public key, not authorization for this assistant to connect. SSH requires a properly authorized operator key. Use a dedicated sudo user and test key login before disabling password/root login.
-
-Before production use: verify site creation, TLS, scheduler/workers, backups to an encrypted off-host location and tested restores, monitoring and patching. Do not use docker compose down -v.
+No CI pipeline, public service, image push or live database migration is triggered by this documentation change.

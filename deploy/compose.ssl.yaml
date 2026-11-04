@@ -1,27 +1,8 @@
+# Opt-in public HTTPS override. Never include it in the private test stack.
 services:
-  configurator:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
-  backend:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
   frontend:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
     environment:
-      FRAPPE_SITE_NAME_HEADER: armember.ir
-  websocket:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
-  queue-short:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
-  queue-long:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
-  scheduler:
-    image: armember/erpnext:${ERPNEXT_VERSION:-v16.53.0}
-    pull_policy: never
+      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:?Set SITE_NAME in .env}
   caddy:
     image: caddy:2.10.2-alpine
     restart: unless-stopped
@@ -32,6 +13,7 @@ services:
       - "443:443"
       - "443:443/udp"
     environment:
+      SITE_NAME: ${SITE_NAME:?Set SITE_NAME in .env}
       ACME_EMAIL: ${ACME_EMAIL:?Set ACME_EMAIL in .env}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro

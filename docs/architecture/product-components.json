@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "graph_type": "reusable_product_components",
+  "generated_by_graphify": false,
+  "scope": "product_not_customer",
+  "nodes": [
+    {
+      "id": "frappe",
+      "kind": "framework",
+      "repository": "https://github.com/frappe/frappe",
+      "version": "v16.53.0",
+      "status": "source_selected_runtime_unverified"
+    },
+    {
+      "id": "erpnext",
+      "kind": "upstream_erp",
+      "repository": "https://github.com/frappe/erpnext",
+      "version": "v16.53.0",
+      "status": "source_selected_runtime_unverified"
+    },
+    {
+      "id": "hrms",
+      "kind": "upstream_app",
+      "repository": "https://github.com/frappe/hrms",
+      "ref": "v16.53.0",
+      "commit": "b12d935b99c1434618845fdd9f3a3d340b5a3aed",
+      "status": "build_pending"
+    },
+    {
+      "id": "erpnext_iran",
+      "kind": "third_party_app",
+      "repository": "https://github.com/bijanshdevops/erpnext_iran",
+      "commit": "60dc7b8b51f42a74ba65bee314922326788db59b",
+      "status": "v16_ci_passed_live_legal_unverified"
+    },
+    {
+      "id": "bisness_core",
+      "kind": "first_party_app",
+      "path": "apps/bisness_core",
+      "version": "0.1.0",
+      "status": "scaffold_only_runtime_unverified"
+    }
+  ],
+  "edges": [
+    {
+      "from": "erpnext",
+      "to": "frappe",
+      "type": "depends_on"
+    },
+    {
+      "from": "hrms",
+      "to": "frappe",
+      "type": "depends_on"
+    },
+    {
+      "from": "hrms",
+      "to": "erpnext",
+      "type": "depends_on"
+    },
+    {
+      "from": "erpnext_iran",
+      "to": "erpnext",
+      "type": "depends_on"
+    },
+    {
+      "from": "bisness_core",
+      "to": "erpnext",
+      "type": "depends_on"
+    },
+    {
+      "from": "bisness_core",
+      "to": "hrms",
+      "type": "depends_on"
+    },
+    {
+      "from": "bisness_core",
+      "to": "erpnext_iran",
+      "type": "depends_on"
+    }
+  ],
+  "out_of_scope_until_verified": [
+    "automated_intercompany_eliminations",
+    "group_treasury",
+    "Iran_Moadian_live_compliance",
+    "Iran_payroll_legal_certification"
+  ],
+  "notes": "This hand-maintained product graph is neither a generated Graphify graph nor a customer RFP graph."
+}

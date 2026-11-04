@@ -1,0 +1,1112 @@
+{
+  "schema_version": 1,
+  "graph_kind": "customer_requirement_companion",
+  "description": "This is not graphify-out/graph.json. It is a manually curated, version-controlled RFP requirement graph; no code linkage is asserted until verified.",
+  "source": {
+    "title": "گروه گسترش انرژی ویرا — درخواست پیشنهاد مالی و فنی",
+    "sha256": "acd665933df4fc029446e6d92147f7e1598d56321fa99733215e5ba366177440"
+  },
+  "nodes": [
+    {
+      "id": "DOMAIN-ORG",
+      "type": "domain",
+      "label": "ساختار و حقوق"
+    },
+    {
+      "id": "DOMAIN-FIN",
+      "type": "domain",
+      "label": "مالی"
+    },
+    {
+      "id": "DOMAIN-PRJ",
+      "type": "domain",
+      "label": "پروژه"
+    },
+    {
+      "id": "DOMAIN-HR",
+      "type": "domain",
+      "label": "منابع انسانی"
+    },
+    {
+      "id": "DOMAIN-TEC",
+      "type": "domain",
+      "label": "فناوری"
+    },
+    {
+      "id": "DOMAIN-DEL",
+      "type": "domain",
+      "label": "استقرار"
+    },
+    {
+      "id": "DOMAIN-VND",
+      "type": "domain",
+      "label": "قرارداد و پشتیبانی"
+    },
+    {
+      "id": "VIRA-ORG-001",
+      "type": "requirement",
+      "label": "ثبت ساختار حقوقی فعلی و ساختار مدیریتی مطلوب بدون یکسان فرض کردن آن‌ها",
+      "domain": "ORG",
+      "section": "1.1",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-ORG-002",
+      "type": "requirement",
+      "label": "مدل‌سازی شرکت‌های تابعه در یک ساختار یکپارچه با استقلال مالی",
+      "domain": "ORG",
+      "section": "1.1, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-ORG-003",
+      "type": "requirement",
+      "label": "استقلال مالی شرکت-پروژه‌های دارای دفاتر مستقل",
+      "domain": "ORG",
+      "section": "1.1",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-ORG-004",
+      "type": "requirement",
+      "label": "پیشنهاد محل استقرار خدمات مرکزی و منطق حاکمیت آن",
+      "domain": "ORG",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-ORG-005",
+      "type": "requirement",
+      "label": "پوشش کارکنان چندسمتی و کارتابل‌های چندشرکتی",
+      "domain": "ORG",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-ORG-006",
+      "type": "requirement",
+      "label": "برنامه ظرفیت‌سنجی بر اساس جدول ۱۴ ردیفی و ۲۲۶ کاربر تخمینی",
+      "domain": "ORG",
+      "section": "1.5",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-001",
+      "type": "requirement",
+      "label": "شروع استقرار از یکپارچه‌سازی مالی شرکت‌های گروه",
+      "domain": "FIN",
+      "section": "1.4",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-002",
+      "type": "requirement",
+      "label": "یکسان‌سازی کدینگ و اصطلاحات حسابداری بین شرکت‌ها",
+      "domain": "FIN",
+      "section": "1.2, 3",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-003",
+      "type": "requirement",
+      "label": "دفاتر و صورت‌های مالی مستقل برای هر شرکت مشمول",
+      "domain": "FIN",
+      "section": "1.1, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-004",
+      "type": "requirement",
+      "label": "ثبت اسناد مالی و لجستیکی متناظر در تراکنش‌های بین‌شرکتی",
+      "domain": "FIN",
+      "section": "1.1, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-005",
+      "type": "requirement",
+      "label": "تطبیق و تسویه حساب‌های بین‌شرکتی",
+      "domain": "FIN",
+      "section": "1.2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-006",
+      "type": "requirement",
+      "label": "صورت‌های مالی تلفیقی گروه با حذف مناسب معاملات درون‌گروهی",
+      "domain": "FIN",
+      "section": "1.2, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-007",
+      "type": "requirement",
+      "label": "دید متمرکز و به‌موقع از نقدینگی و خزانه‌داری",
+      "domain": "FIN",
+      "section": "1.2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-008",
+      "type": "requirement",
+      "label": "ردیابی گردش منابع نقد و تجمیع منابع در سطح گروه",
+      "domain": "FIN",
+      "section": "1.2, 1.3",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-FIN-009",
+      "type": "requirement",
+      "label": "مدیریت مالی شرکت‌های فاقد نرم‌افزار مالی فعلی",
+      "domain": "FIN",
+      "section": "1.4",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-PRJ-001",
+      "type": "requirement",
+      "label": "ارتباط مستقیم و به‌موقع عملیات پروژه و مالی",
+      "domain": "PRJ",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-PRJ-002",
+      "type": "requirement",
+      "label": "اتصال هزینه، درآمد و اسناد به شناسه پروژه و شرکت-پروژه",
+      "domain": "PRJ",
+      "section": "1.1, 1.4",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-PRJ-003",
+      "type": "requirement",
+      "label": "پوشش فرآیندهای پیمانکاری و حسابداری پروژه متناسب با قوانین ایران",
+      "domain": "PRJ",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-PRJ-004",
+      "type": "requirement",
+      "label": "پیوند پروژه، تأمین، ساخت و عملیات به امور مالی",
+      "domain": "PRJ",
+      "section": "1.2, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-001",
+      "type": "requirement",
+      "label": "فرآیند یکپارچه منابع انسانی در همه شرکت‌ها",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-002",
+      "type": "requirement",
+      "label": "فرآیند جذب و استخدام",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-003",
+      "type": "requirement",
+      "label": "آموزش و سوابق توسعه کارکنان",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-004",
+      "type": "requirement",
+      "label": "قرارداد کار و احکام پرسنلی",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-005",
+      "type": "requirement",
+      "label": "ورود و خروج و محاسبه کارکرد",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-006",
+      "type": "requirement",
+      "label": "مرخصی و مأموریت",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-007",
+      "type": "requirement",
+      "label": "وام، مساعده و کسورات کارکنان",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-008",
+      "type": "requirement",
+      "label": "محاسبه حقوق و صدور فیش",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-HR-009",
+      "type": "requirement",
+      "label": "تولید فهرست بیمه و مالیات حقوق ایران",
+      "domain": "HR",
+      "section": "1.4",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-001",
+      "type": "requirement",
+      "label": "معماری یکپارچه و توسعه‌پذیر، بدون جزیره‌های سفارشی مستقل",
+      "domain": "TEC",
+      "section": "1.3, 2",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-002",
+      "type": "requirement",
+      "label": "ارائه تحلیل و نمودار معماری مبتنی بر Domain-Driven Design",
+      "domain": "TEC",
+      "section": "2",
+      "page": 7,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-003",
+      "type": "requirement",
+      "label": "تعیین تکلیف درخواست اکوسیستم مایکروسافت و مدارک صلاحیت",
+      "domain": "TEC",
+      "section": "1.3, 2, 7.4",
+      "page": 4,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-004",
+      "type": "requirement",
+      "label": "بازطراحی فرآیندها بر مبنای Best Practice به جای کپی فرآیند معیوب",
+      "domain": "TEC",
+      "section": "2, 3",
+      "page": 7,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-005",
+      "type": "requirement",
+      "label": "بومی‌سازی تاریخ شمسی و استانداردهای جاری ایران",
+      "domain": "TEC",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-006",
+      "type": "requirement",
+      "label": "بررسی و پوشش سامانه مودیان و الزامات مالیاتی ایران",
+      "domain": "TEC",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-007",
+      "type": "requirement",
+      "label": "تعیین دامنه API و اتصال به مدیریت پروژه، BI، CRM، DMS، پرتال و Workflow",
+      "domain": "TEC",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-TEC-008",
+      "type": "requirement",
+      "label": "پیشنهاد الگوی یک پایگاه داده یا معماری یکپارچه چندشرکتی",
+      "domain": "TEC",
+      "section": "2",
+      "page": 8,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-001",
+      "type": "requirement",
+      "label": "فاز شناخت همراه با نقطه تصمیم ادامه، توقف یا بازطراحی",
+      "domain": "DEL",
+      "section": "3",
+      "page": 9,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-002",
+      "type": "requirement",
+      "label": "استقرار مرحله‌ای و رد اجرای Big Bang",
+      "domain": "DEL",
+      "section": "3",
+      "page": 9,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-003",
+      "type": "requirement",
+      "label": "پیشنهاد مستدل شرکت یا شرکت‌های پایلوت",
+      "domain": "DEL",
+      "section": "1.4, 3",
+      "page": 5,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-004",
+      "type": "requirement",
+      "label": "روش اجرا، WBS، جدول زمان‌بندی و تحویل‌های کوچک",
+      "domain": "DEL",
+      "section": "3",
+      "page": 9,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-005",
+      "type": "requirement",
+      "label": "مهاجرت داده از سامانه‌های فعلی و Excel",
+      "domain": "DEL",
+      "section": "3",
+      "page": 10,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-006",
+      "type": "requirement",
+      "label": "معیار پذیرش، Go-Live و برنامه بازگشت",
+      "domain": "DEL",
+      "section": "3",
+      "page": 10,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-007",
+      "type": "requirement",
+      "label": "امنیت، سخت‌سازی و آزمون امنیت مورد تأیید کارفرما",
+      "domain": "DEL",
+      "section": "3",
+      "page": 10,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-008",
+      "type": "requirement",
+      "label": "استانداردسازی داده مرجع حساب، پروژه، کالا و طرف حساب",
+      "domain": "DEL",
+      "section": "3",
+      "page": 9,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-009",
+      "type": "requirement",
+      "label": "کمیته راهبری و مدیریت مقاومت واحدهای تابعه",
+      "domain": "DEL",
+      "section": "3, 4",
+      "page": 10,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-010",
+      "type": "requirement",
+      "label": "آموزش مدیریت، راهبران و کاربران نهایی",
+      "domain": "DEL",
+      "section": "4",
+      "page": 11,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-DEL-011",
+      "type": "requirement",
+      "label": "انتقال دانش واقعی فنی، توسعه و تنظیمات به کارفرما",
+      "domain": "DEL",
+      "section": "4",
+      "page": 11,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-001",
+      "type": "requirement",
+      "label": "معرفی تیم نام‌دار، رزومه و مدارک تخصصی قابل استعلام",
+      "domain": "VND",
+      "section": "4",
+      "page": 11,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-002",
+      "type": "requirement",
+      "label": "ثبات نفرات کلیدی و تأیید تغییر آنان توسط کارفرما",
+      "domain": "VND",
+      "section": "4",
+      "page": 11,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-003",
+      "type": "requirement",
+      "label": "پشتیبانی سه‌سطحی و سیستم تیکت",
+      "domain": "VND",
+      "section": "5",
+      "page": 12,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-004",
+      "type": "requirement",
+      "label": "تکمیل مقادیر زمان پاسخ و حل SLA برای چهار سطح شدت",
+      "domain": "VND",
+      "section": "5",
+      "page": 12,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-005",
+      "type": "requirement",
+      "label": "سیاست به‌روزرسانی و اثر توقف و هزینه پشتیبانی سالانه",
+      "domain": "VND",
+      "section": "5, 6",
+      "page": 12,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-006",
+      "type": "requirement",
+      "label": "شکست هزینه لایسنس، مشاوره، اجرا، آموزش، مهاجرت، زیرساخت و پشتیبانی",
+      "domain": "VND",
+      "section": "6.1",
+      "page": 13,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-007",
+      "type": "requirement",
+      "label": "تشریح لایسنس کاربران نام‌دار/همزمان و پوشش شرکت‌های تابعه",
+      "domain": "VND",
+      "section": "6.2",
+      "page": 13,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-008",
+      "type": "requirement",
+      "label": "پرداخت مرحله‌ای در برابر تحویل واقعی",
+      "domain": "VND",
+      "section": "6.3",
+      "page": 13,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-009",
+      "type": "requirement",
+      "label": "سوابق اجرای مشابه در پنج سال گذشته",
+      "domain": "VND",
+      "section": "7.1",
+      "page": 14,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-010",
+      "type": "requirement",
+      "label": "حداقل دو مشتری مرجع قابل استعلام",
+      "domain": "VND",
+      "section": "7.2",
+      "page": 14,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-011",
+      "type": "requirement",
+      "label": "ارائه نمونه موفق بازطراحی فرآیند",
+      "domain": "VND",
+      "section": "7.3",
+      "page": 14,
+      "status": "unverified",
+      "code_symbols": []
+    },
+    {
+      "id": "VIRA-VND-012",
+      "type": "requirement",
+      "label": "گواهی‌های رسمی مایکروسافت یا مدارک جایگزین معتبر با توجه به تحریم",
+      "domain": "VND",
+      "section": "7.4",
+      "page": 14,
+      "status": "unverified",
+      "code_symbols": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "VIRA-ORG-001",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-002",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-003",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-004",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-005",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-006",
+      "to": "DOMAIN-ORG",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-001",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-002",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-003",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-004",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-005",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-006",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-007",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-008",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-FIN-009",
+      "to": "DOMAIN-FIN",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-PRJ-001",
+      "to": "DOMAIN-PRJ",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-PRJ-002",
+      "to": "DOMAIN-PRJ",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-PRJ-003",
+      "to": "DOMAIN-PRJ",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-PRJ-004",
+      "to": "DOMAIN-PRJ",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-001",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-002",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-003",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-004",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-005",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-006",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-007",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-008",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-HR-009",
+      "to": "DOMAIN-HR",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-001",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-002",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-003",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-004",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-005",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-006",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-007",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-TEC-008",
+      "to": "DOMAIN-TEC",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-001",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-002",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-003",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-004",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-005",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-006",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-007",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-008",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-009",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-010",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-DEL-011",
+      "to": "DOMAIN-DEL",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-001",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-002",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-003",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-004",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-005",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-006",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-007",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-008",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-009",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-010",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-011",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-VND-012",
+      "to": "DOMAIN-VND",
+      "type": "belongs_to",
+      "basis": "recorded_requirement"
+    },
+    {
+      "from": "VIRA-ORG-001",
+      "to": "VIRA-ORG-002",
+      "type": "requires_model",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-ORG-002",
+      "to": "VIRA-FIN-003",
+      "type": "enables",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-ORG-003",
+      "to": "VIRA-FIN-003",
+      "type": "specializes",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-FIN-002",
+      "to": "VIRA-FIN-006",
+      "type": "enables",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-FIN-003",
+      "to": "VIRA-FIN-004",
+      "type": "enables",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-FIN-004",
+      "to": "VIRA-FIN-005",
+      "type": "enables",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-FIN-005",
+      "to": "VIRA-FIN-006",
+      "type": "enables",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-FIN-007",
+      "to": "VIRA-FIN-008",
+      "type": "informs",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-PRJ-001",
+      "to": "VIRA-FIN-003",
+      "type": "feeds",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-PRJ-002",
+      "to": "VIRA-FIN-006",
+      "type": "feeds",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-ORG-005",
+      "to": "VIRA-HR-001",
+      "type": "constrains",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-HR-005",
+      "to": "VIRA-HR-008",
+      "type": "feeds",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-HR-007",
+      "to": "VIRA-HR-008",
+      "type": "feeds",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-HR-008",
+      "to": "VIRA-HR-009",
+      "type": "feeds",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-TEC-003",
+      "to": "VIRA-DEL-001",
+      "type": "decision_gate",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-TEC-008",
+      "to": "VIRA-ORG-003",
+      "type": "architecture_gate",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-DEL-001",
+      "to": "VIRA-DEL-003",
+      "type": "precedes",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-DEL-003",
+      "to": "VIRA-FIN-001",
+      "type": "precedes",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-DEL-005",
+      "to": "VIRA-DEL-006",
+      "type": "precedes",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    },
+    {
+      "from": "VIRA-VND-004",
+      "to": "VIRA-VND-005",
+      "type": "priced_with",
+      "basis": "proposed_architecture_dependency_not_RFP_assertion"
+    }
+  ]
+}

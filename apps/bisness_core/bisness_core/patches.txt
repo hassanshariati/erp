@@ -1,0 +1,1 @@
+# No schema/data migrations in the initial app skeleton.

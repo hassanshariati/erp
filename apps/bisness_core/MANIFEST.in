@@ -1,0 +1,2 @@
+include README.md
+recursive-include bisness_core *.json *.html *.js *.css *.txt *.py
