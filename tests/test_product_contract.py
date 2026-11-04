@@ -62,6 +62,12 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn("60dc7b8b51f42a74ba65bee314922326788db59b", source)
         self.assertIn('git -C apps/hrms rev-parse HEAD', source)
         self.assertIn('git -C apps/erpnext_iran rev-parse HEAD', source)
+        self.assertIn("638bf3db23e7142870819a213368e028866b79b1", source)
+        self.assertIn("c7dc954d8275756deb5ad24f7c35c3f3c2ca1a6c", source)
+        self.assertIn("ARG CRM_REF=main", source)
+        self.assertIn("ARG INSIGHTS_REF=version-3", source)
+        self.assertIn('git -C apps/crm rev-parse HEAD', source)
+        self.assertIn('git -C apps/insights rev-parse HEAD', source)
 
     def test_default_http_is_private_and_site_is_parameterized(self) -> None:
         """Public HTTP or a fixed tenant site must break this test."""
@@ -90,7 +96,7 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn('CONFIRM_INITIALIZE', script)
         self.assertIn('test -e "sites/$SITE_NAME"', script)
         self.assertIn("An existing or partial site was found.", script)
-        self.assertIn('for app in hrms erpnext_iran bisness_core;', script)
+        self.assertIn('for app in hrms erpnext_iran bisness_core crm insights;', script)
 
 
 if __name__ == "__main__":

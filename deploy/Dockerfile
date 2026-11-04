@@ -24,6 +24,18 @@ RUN bench get-app --branch "${HRMS_REF}" https://github.com/frappe/hrms.git \
     && bench get-app --branch "${IRAN_REF}" https://github.com/bijanshdevops/erpnext_iran.git \
     && test "$(git -C apps/erpnext_iran rev-parse HEAD)" = "${IRAN_SHA}"
 
+# Version 16-compatible, reviewed upstream revisions.
+# Frappe CRM stable v1.x uses main, Frappe Insights v3 supports Frappe 16.
+ARG CRM_REF=main
+ARG CRM_SHA=638bf3db23e7142870819a213368e028866b79b1
+ARG INSIGHTS_REF=version-3
+ARG INSIGHTS_SHA=c7dc954d8275756deb5ad24f7c35c3f3c2ca1a6c
+
+RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
+    && test "$(git -C apps/crm rev-parse HEAD)" = "${CRM_SHA}" \
+    && bench get-app --branch "${INSIGHTS_REF}" https://github.com/frappe/insights.git \
+    && test "$(git -C apps/insights rev-parse HEAD)" = "${INSIGHTS_SHA}"
+
 COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_core
 
 RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
@@ -38,5 +50,5 @@ USER frappe
 WORKDIR /home/frappe/frappe-bench
 
 LABEL org.opencontainers.image.title="Generic ERPNext business stack"
-LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core"
+LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights"
 

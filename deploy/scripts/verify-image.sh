@@ -14,9 +14,9 @@ docker image inspect "$IMAGE" >/dev/null
 docker run --rm --entrypoint bash "$IMAGE" -lc '
   set -Eeuo pipefail
   cd /home/frappe/frappe-bench
-  for app in frappe erpnext hrms erpnext_iran bisness_core; do
+  for app in frappe erpnext hrms erpnext_iran bisness_core crm insights; do
     test -d "apps/$app" || { echo "Missing app: $app"; exit 1; }
   done
-  ./env/bin/python -m pip show hrms erpnext_iran bisness_core >/dev/null
-  echo "Four-app image package check passed."
+  ./env/bin/python -m pip show hrms erpnext_iran bisness_core crm insights >/dev/null
+  echo "Six-app image package check passed."
 '

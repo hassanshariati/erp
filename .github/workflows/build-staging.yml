@@ -1,4 +1,4 @@
-name: Build and test four-app ERPNext (isolated)
+name: Build and test ERPNext with CRM and Insights (isolated)
 
 on:
   push:
@@ -16,7 +16,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: erpnext-four-app-staging
+  group: erpnext-six-app-staging
   cancel-in-progress: true
 
 jobs:
@@ -50,12 +50,12 @@ jobs:
           HOST_HTTP_PORT=18080
           ENV
 
-      - name: Build reviewed ERPNext image with HRMS, Iran and Bisness Core
+      - name: Build reviewed ERPNext image including CRM and Insights
         run: |
           set -Eeuo pipefail
           docker build --progress=plain --build-arg ERPNEXT_VERSION=v16.53.0 -t erpci/erpnext:staging -f deploy/Dockerfile .
 
-      - name: Verify four-app image
+      - name: Verify six-app image
         run: bash deploy/scripts/verify-image.sh
 
       - name: Verify installed apps on disposable site

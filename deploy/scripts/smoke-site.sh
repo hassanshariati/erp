@@ -11,7 +11,7 @@ set +a
 
 COMPOSE=(docker compose -f compose.yaml -f compose.production.yaml)
 installed="$("${COMPOSE[@]}" exec -T backend bench --site "$SITE_NAME" list-apps)"
-for app in erpnext hrms erpnext_iran bisness_core; do
+for app in erpnext hrms erpnext_iran bisness_core crm insights; do
   printf '%s\n' "$installed" | grep -Eq "^$app([[:space:]]|$)" || {
     echo "Missing installed app on site: $app"; exit 1;
   }
@@ -20,4 +20,10 @@ command -v curl >/dev/null || { echo "curl is required for HTTP smoke."; exit 2;
 curl --fail --silent --show-error --max-time 15 \
   --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/api/method/ping" >/dev/null
-echo "Four-app site and private HTTP smoke checks passed."
+# Check that SPA routes are served from the same site (no separate tenant).
+for path in crm insights; do
+  curl --fail --silent --show-error --max-time 15 \
+    --retry 12 --retry-delay 5 --retry-connrefused \
+    -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/$path" >/dev/null
+done
+echo "Six-app site, CRM/Insights routes, and private HTTP smoke checks passed."
