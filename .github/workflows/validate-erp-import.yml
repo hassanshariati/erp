@@ -1,0 +1,55 @@
+name: Validate ERP Import
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/validate-erp-import.yml"
+      - "apps/**"
+      - "deploy/**"
+      - "tests/**"
+      - "docs/architecture/product-components.json"
+  pull_request:
+    paths:
+      - ".github/workflows/validate-erp-import.yml"
+      - "apps/**"
+      - "deploy/**"
+      - "tests/**"
+      - "docs/architecture/product-components.json"
+
+permissions:
+  contents: read
+
+jobs:
+  static-validation:
+    name: Read-only ERP deployment checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out code without submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Python tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Check Bash script syntax
+        run: bash -n deploy/scripts/*.sh
+
+      - name: Validate production Compose without running containers
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p deploy/secrets
+          printf '%s\n' 'test-only-not-a-secret' > deploy/secrets/db_root_password
+          cp deploy/.env.example deploy/.env
+          docker compose \
+            -f deploy/compose.yaml \
+            -f deploy/compose.production.yaml \
+            -f deploy/compose.ssl.yaml \
+            -f deploy/compose.low-memory.yaml \
+            -f deploy/compose.registry.yaml \
+            --project-directory deploy \
+            config --quiet
