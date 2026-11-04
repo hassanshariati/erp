@@ -1,0 +1,73 @@
+name: Build and test four-app ERPNext (isolated)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-staging.yml"
+      - "deploy/Dockerfile"
+      - "deploy/compose*.yaml"
+      - "deploy/scripts/initialize.sh"
+      - "apps/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: erpnext-four-app-staging
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: Build image and install on disposable Docker site
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Configure disposable stack
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd deploy
+          umask 077
+          mkdir -p secrets backups
+          openssl rand -base64 48 > secrets/db_root_password
+          openssl rand -base64 48 > secrets/admin_password
+          cat > .env <<'ENV'
+          ERPNEXT_VERSION=v16.53.0
+          COMPOSE_PROJECT_NAME=erpci
+          CUSTOM_IMAGE=erpci/erpnext
+          CUSTOM_TAG=staging
+          PULL_POLICY=never
+          SITE_NAME=staging.local
+          HOST_HTTP_PORT=18080
+          ENV
+
+      - name: Build reviewed ERPNext image with HRMS, Iran and Bisness Core
+        run: |
+          set -Eeuo pipefail
+          docker build --progress=plain --build-arg ERPNEXT_VERSION=v16.53.0 -t erpci/erpnext:staging -f deploy/Dockerfile .
+
+      - name: Verify four-app image
+        run: bash deploy/scripts/verify-image.sh
+
+      - name: Verify installed apps on disposable site
+        run: |
+          set -Eeuo pipefail
+          cd deploy
+          CONFIRM_INITIALIZE=YES bash scripts/initialize.sh
+          bash scripts/smoke-site.sh
+
+      - name: Report current state on failure
+        if: failure()
+        shell: bash
+        run: |
+          cd deploy
+          docker compose -f compose.yaml -f compose.production.yaml ps -a || true
+          docker compose -f compose.yaml -f compose.production.yaml logs --tail=75 db backend configurator || true
