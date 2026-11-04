@@ -1,0 +1,38 @@
+name: One-time production preflight (read only)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/production-preflight.yml"
+
+permissions: {}
+
+jobs:
+  check-vps:
+    runs-on: [self-hosted, linux, x64, erpnext-deploy]
+    timeout-minutes: 5
+    steps:
+      - name: Read-only diagnostics for ERPNext server
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo '=== Identity ==='
+          id
+          echo '=== Local source revision ==='
+          git -C /opt/erp rev-parse --short HEAD || true
+          echo '=== Tracked changes count ==='
+          git -C /opt/erp status --porcelain --untracked-files=no | wc -l || true
+          echo '=== Deploy files and config presence ==='
+          test -r /opt/erp/deploy/.env && echo 'env readable' || echo 'env not readable'
+          test -r /opt/erp/deploy/compose.yaml && echo 'compose readable' || echo 'compose not readable'
+          echo '=== Docker access ==='
+          docker info --format '{{.ServerVersion}}' 2>&1 || true
+          echo '=== Memory ==='
+          free -h || true
+          echo '=== Disk ==='
+          df -h /opt/erp || true
+          echo '=== Local frontend HTTP ==='
+          curl -sS -o /dev/null -w 'HTTP %{http_code}\n' --max-time 12 -H 'Host: armember.ir' http://127.0.0.1:8080/api/method/ping || true
+          echo '=== Public HTTPS ==='
+          curl -sS -o /dev/null -w 'HTTPS %{http_code}\n' --max-time 20 https://armember.ir/api/method/ping || true
