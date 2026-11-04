@@ -1,0 +1,26 @@
+name: Verify CRM Insights production wrapper (read only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/check-crm-insights-wrapper.yml"
+permissions: {}
+jobs:
+  verify:
+    runs-on: [self-hosted, linux, x64, erpnext-deploy]
+    timeout-minutes: 4
+    steps:
+      - name: Check restricted wrapper and current site status
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          echo "Runner: $(id -un)"
+          test -x /usr/local/sbin/erpnext-gha-release || { echo "Production wrapper not installed"; exit 1; }
+          if ! grep -Fq 'for app in hrms erpnext_iran bisness_core crm insights; do' /usr/local/sbin/erpnext-gha-release; then
+            echo "CRM/Insights release wrapper not yet installed on VPS."
+            exit 1
+          fi
+          sudo -n -l >/dev/null
+          echo "Approved six-app release wrapper is installed."
+          curl --fail --silent --show-error --max-time 15 https://armember.ir/api/method/ping >/dev/null
+          echo "Existing production ERPNext site responds successfully."
