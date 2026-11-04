@@ -10,7 +10,15 @@ source_image="$1"
 sha="${source_image##*apps-}"
 local_image="armember/erpnext:v16.53.0-apps-${sha:0:12}"
 
-[[ "$(id -un)" == "gha-erp" ]] || { echo "Only the dedicated gha-erp runner may deploy." >&2; exit 1; }
+[[ "$(id -u)" -eq 0 ]] || { echo "Only the root-owned restricted deployment wrapper may deploy." >&2; exit 1; }
+if [[ ! -r /dev/stdin ]]; then
+  echo "Missing GitHub Container Registry authentication token." >&2; exit 1
+fi
+IFS= read -r ghcr_token || { echo "Cannot read GHCR authentication token." >&2; exit 1; }
+[[ -n "$ghcr_token" ]] || { echo "Empty GHCR authentication token." >&2; exit 1; }
+printf '%s\n' "$ghcr_token" | docker login ghcr.io -u hassanshariati --password-stdin >/dev/null
+unset ghcr_token
+trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
 cd /opt/erp/deploy
 for file in .env compose.yaml compose.production.yaml compose.ssl.yaml compose.low-memory.yaml compose.registry.yaml secrets/db_root_password; do
   test -r "$file" || { echo "Cannot read $file" >&2; exit 1; }
@@ -50,7 +58,7 @@ docker run --rm --network none --entrypoint bash "$local_image" -lc \
 
 # Back up database/files and encryption configuration outside the Docker volumes.
 # Never upload production backups to Actions artifacts.
-backup_dir="/home/gha-erp/erp-backups/$(date -u +%Y%m%dT%H%M%SZ)-${sha:0:12}"
+backup_dir="/var/backups/erpnext/$(date -u +%Y%m%dT%H%M%SZ)-${sha:0:12}"
 install -d -m 700 "$backup_dir"
 "${dc[@]}" exec -T backend bench --site armember.ir backup --with-files
 backend_cid="$("${dc[@]}" ps -q backend)"

@@ -7,12 +7,13 @@ on:
       - ".github/workflows/build-staging.yml"
       - "deploy/Dockerfile"
       - "deploy/compose*.yaml"
-      - "deploy/scripts/initialize.sh"
+      - "deploy/scripts/**"
       - "apps/**"
   workflow_dispatch:
 
 permissions:
   contents: read
+  packages: write
 
 concurrency:
   group: erpnext-four-app-staging
@@ -64,6 +65,18 @@ jobs:
           CONFIRM_INITIALIZE=YES bash scripts/initialize.sh
           bash scripts/smoke-site.sh
 
+      - name: Publish tested image to GitHub Container Registry
+        shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -Eeuo pipefail
+          image="ghcr.io/hassanshariati/erp:apps-${GITHUB_SHA}"
+          printf '%s\n' "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker tag erpci/erpnext:staging "$image"
+          docker push "$image"
+          docker logout ghcr.io
+
       - name: Report current state on failure
         if: failure()
         shell: bash
@@ -71,3 +84,39 @@ jobs:
           cd deploy
           docker compose -f compose.yaml -f compose.production.yaml ps -a || true
           docker compose -f compose.yaml -f compose.production.yaml logs --tail=75 db backend configurator || true
+
+  production:
+    name: Upgrade existing armember.ir site (restricted wrapper)
+    needs: integration
+    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
+    runs-on: [self-hosted, linux, x64, erpnext-deploy]
+    environment: production
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout reviewed release scripts
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Verify root-controlled server deployment wrapper
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -x /usr/local/sbin/erpnext-gha-release || {
+            echo "One-time server bootstrap required: sudo bash /opt/erp/deploy/scripts/bootstrap-gha-release.sh" >&2
+            exit 1
+          }
+          sudo -n -l >/dev/null
+
+      - name: Install reviewed apps onto the existing ERPNext site
+        shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_IMAGE: ghcr.io/hassanshariati/erp:apps-${{ github.sha }}
+        run: |
+          set -Eeuo pipefail
+          printf '%s\n' "$GHCR_TOKEN" | sudo -n /usr/local/sbin/erpnext-gha-release "$RELEASE_IMAGE"
