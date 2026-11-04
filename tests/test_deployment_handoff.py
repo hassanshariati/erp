@@ -42,6 +42,14 @@ class DeploymentHandoffTests(unittest.TestCase):
         self.assertIn("deploy/secrets", ignored)
         self.assertIn("deploy/.env", ignored)
 
+    def test_existing_production_upgrade_installs_new_apps_after_backup(self) -> None:
+        upgrade = (DEPLOY / "scripts" / "upgrade-existing-production.sh").read_text(encoding="utf-8")
+        self.assertIn("bench --site armember.ir backup --with-files", upgrade)
+        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights;", upgrade)
+        self.assertIn("bench --site armember.ir migrate", upgrade)
+        self.assertIn("Six-app ERPNext upgrade", upgrade)
+        self.assertNotIn("docker compose down -v", upgrade)
+
     def test_image_build_has_separate_compiler_stage(self) -> None:
         dockerfile = (DEPLOY / "Dockerfile").read_text(encoding="utf-8")
         self.assertIn("FROM frappe/build:version-16 AS builder", dockerfile)
