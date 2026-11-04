@@ -1,3 +1,6 @@
+# Fail-closed rule: production runs only after a fully passing disposable install,
+# and requires the root-owned on-host wrapper to be byte-for-byte identical to
+# the reviewed source committed in this workflow revision.
 name: Build and test ERPNext with CRM and Insights (isolated)
 
 on:
@@ -86,11 +89,11 @@ jobs:
           docker compose -f compose.yaml -f compose.production.yaml logs --tail=75 db backend configurator || true
 
   production:
-    name: Upgrade existing armember.ir site (restricted wrapper)
+    name: Upgrade existing armember.ir with CRM and Insights (restricted wrapper)
     needs: integration
     # Disabled while six-app image is being integrated. Re-enable only after
     # successful disposable-site test and root-owned production wrapper review.
-    if: ${{ false }}
+    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45
@@ -113,6 +116,12 @@ jobs:
             exit 1
           }
           sudo -n -l >/dev/null
+          # Refuse a stale root-owned helper: the previous release knew only
+          # about HRMS/Iran/Bisness Core and would skip CRM/Insights.
+          if ! cmp -s /usr/local/sbin/erpnext-gha-release deploy/scripts/upgrade-existing-production.sh; then
+            echo "Server wrapper is out of date. Update it from the reviewed repository and run the root-only bootstrap script." >&2
+            exit 1
+          fi
 
       - name: Install reviewed apps onto the existing ERPNext site
         shell: bash

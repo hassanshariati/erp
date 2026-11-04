@@ -54,7 +54,7 @@ echo "Pulling approved image $source_image"
 docker pull "$source_image"
 docker tag "$source_image" "$local_image"
 docker run --rm --network none --entrypoint bash "$local_image" -lc \
-  'cd /home/frappe/frappe-bench && for app in frappe erpnext hrms erpnext_iran bisness_core; do test -d "apps/$app"; done'
+  'cd /home/frappe/frappe-bench && for app in frappe erpnext hrms erpnext_iran bisness_core crm insights; do test -d "apps/$app"; done'
 
 # Back up database/files and encryption configuration outside the Docker volumes.
 # Never upload production backups to Actions artifacts.
@@ -81,7 +81,7 @@ echo "Backup saved securely: $backup_dir"
 "${dc[@]}" run --rm --no-deps backend bash -lc '
   set -Eeuo pipefail
   ls -1 apps > sites/apps.txt
-  for app in hrms erpnext_iran bisness_core; do
+  for app in hrms erpnext_iran bisness_core crm insights; do
     if bench --site armember.ir list-apps | awk "{print \$1}" | grep -qx "$app"; then
       echo "$app already installed"
     else
@@ -93,9 +93,25 @@ echo "Backup saved securely: $backup_dir"
 "${dc[@]}" up -d --no-deps backend frontend websocket queue-short queue-long scheduler
 "${dc[@]}" exec -T backend bench --site armember.ir enable-scheduler
 "${dc[@]}" exec -T backend bench --site armember.ir set-maintenance-mode off
-"${dc[@]}" exec -T backend bench --site armember.ir list-apps
+installed="$("${dc[@]}" exec -T backend bench --site armember.ir list-apps)"
+printf '%s\n' "$installed"
+for app in erpnext hrms erpnext_iran bisness_core crm insights; do
+  printf '%s\n' "$installed" | grep -Eq "^$app([[:space:]]|$)" || {
+    echo "Missing expected installed app: $app" >&2; exit 1;
+  }
+done
 curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused \
   -H 'Host: armember.ir' http://127.0.0.1:8080/api/method/ping >/dev/null
 curl --fail --silent --show-error --retry 6 --retry-delay 5 \
   https://armember.ir/api/method/ping >/dev/null
-echo "Four-app upgrade completed and verified."
+# Both standalone SPA pages must resolve on the existing site, not new tenants.
+for path in crm insights; do
+  code="$(curl --silent --show-error --retry 8 --retry-delay 5 \
+    --output /dev/null --write-out '%{http_code}' "https://armember.ir/$path")"
+  echo "/$path guest HTTP $code"
+  case "$code" in
+    200|301|302|303|401|403) ;;
+    *) echo "Unexpected response from /$path: $code" >&2; exit 1 ;;
+  esac
+done
+echo "Six-app ERPNext upgrade (including CRM and Insights) completed and verified."
