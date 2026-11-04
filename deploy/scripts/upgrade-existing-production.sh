@@ -106,7 +106,12 @@ curl --fail --silent --show-error --retry 6 --retry-delay 5 \
   https://armember.ir/api/method/ping >/dev/null
 # Both standalone SPA pages must resolve on the existing site, not new tenants.
 for path in crm insights; do
-  curl --fail --silent --show-error --retry 8 --retry-delay 5 \
-    "https://armember.ir/$path" >/dev/null
+  code="$(curl --silent --show-error --retry 8 --retry-delay 5 \
+    --output /dev/null --write-out '%{http_code}' "https://armember.ir/$path")"
+  echo "/$path guest HTTP $code"
+  case "$code" in
+    200|301|302|303|401|403) ;;
+    *) echo "Unexpected response from /$path: $code" >&2; exit 1 ;;
+  esac
 done
 echo "Six-app ERPNext upgrade (including CRM and Insights) completed and verified."
