@@ -1,0 +1,2 @@
+# Match the isolated Graphify runtime used in AI-BMICC.
+graphifyy==0.9.67

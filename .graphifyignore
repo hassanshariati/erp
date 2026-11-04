@@ -1,0 +1,64 @@
+# ERP project: graph only checked-out executable/config source.
+# Generated files, credentials, runtime state, and docs are not graph inputs.
+
+.git/
+.github/
+.agents/
+.graphify/
+.graphify-venv/
+graphify-out/
+**/.venv/
+**/venv/
+**/node_modules/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/dist/
+**/build/
+**/coverage/
+**/*.pyc
+**/*.egg-info/
+
+# Secrets and live data
+.env
+.env.*
+**/.env
+**/.env.*
+**/secrets/
+**/backups/
+**/sites/
+**/logs/
+**/tmp/
+**/cache/
+**/*.log
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+
+# Documentation, generated media, and large archives (code-only mode)
+**/docs/
+**/documentation/
+**/*.md
+**/*.pdf
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.svg
+**/*.html
+**/*.mp4
+**/*.mp3
+**/*.zip
+**/*.tar
+**/*.tar.gz
+**/*.tgz
+**/*.bak
+
+# Tests and fixture material are outside the production topology
+**/tests/
+**/test/
+**/fixtures/
+**/__tests__/
