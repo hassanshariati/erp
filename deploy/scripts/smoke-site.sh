@@ -18,5 +18,6 @@ for app in erpnext hrms erpnext_iran bisness_core; do
 done
 command -v curl >/dev/null || { echo "curl is required for HTTP smoke."; exit 2; }
 curl --fail --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/api/method/ping" >/dev/null
 echo "Four-app site and private HTTP smoke checks passed."
