@@ -88,7 +88,9 @@ jobs:
   production:
     name: Upgrade existing armember.ir site (restricted wrapper)
     needs: integration
-    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
+    # Disabled while six-app image is being integrated. Re-enable only after
+    # successful disposable-site test and root-owned production wrapper review.
+    if: ${{ false }}
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45
