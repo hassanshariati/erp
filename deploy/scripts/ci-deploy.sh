@@ -2,6 +2,14 @@
 set -Eeuo pipefail
 if [[ $# -ne 1 ]] || ! [[ "$1" =~ ^[a-f0-9]{40}$ ]]; then echo "Expected full commit SHA" >&2; exit 2; fi
 SHA="$1"
+# This legacy deployment path only supports the original two-app image.
+# The imported stack adds HRMS, erpnext_iran and bisness_core and requires a
+# tested existing-site migration, separate backup/restore rehearsal and approval.
+source_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+if grep -q '^FROM frappe/build:version-16 AS builder' "$source_dir/../Dockerfile"; then
+  echo "Multi-app image detected. The legacy production deploy is disabled until a staging install, tested backup/restore and controlled upgrade procedure are approved." >&2
+  exit 3
+fi
 cd /opt/erp
 test -f deploy/.env
 test -s deploy/secrets/db_root_password
