@@ -45,7 +45,7 @@ class DeploymentHandoffTests(unittest.TestCase):
     def test_existing_production_upgrade_installs_new_apps_after_backup(self) -> None:
         upgrade = (DEPLOY / "scripts" / "upgrade-existing-production.sh").read_text(encoding="utf-8")
         self.assertIn("bench --site armember.ir backup --with-files", upgrade)
-        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights;", upgrade)
+        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights wiki;", upgrade)
         self.assertIn("bench --site armember.ir migrate", upgrade)
         self.assertIn("Wiki-only ERPNext upgrade", upgrade)
         self.assertIn("for app in hrms erpnext_iran bisness_core crm insights wiki;", upgrade)
