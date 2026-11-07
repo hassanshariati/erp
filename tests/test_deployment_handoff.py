@@ -47,7 +47,9 @@ class DeploymentHandoffTests(unittest.TestCase):
         self.assertIn("bench --site armember.ir backup --with-files", upgrade)
         self.assertIn("for app in hrms erpnext_iran bisness_core crm insights;", upgrade)
         self.assertIn("bench --site armember.ir migrate", upgrade)
-        self.assertIn("Six-app ERPNext upgrade", upgrade)
+        self.assertIn("ERPNext upgrade with Helpdesk, Telephony and Wiki", upgrade)
+        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights telephony helpdesk wiki;", upgrade)
+        self.assertLess(upgrade.index("bench --site armember.ir backup --with-files"), upgrade.index("for app in hrms erpnext_iran bisness_core crm insights telephony helpdesk wiki"))
         self.assertNotIn("docker compose down -v", upgrade)
 
     def test_image_build_has_separate_compiler_stage(self) -> None:
