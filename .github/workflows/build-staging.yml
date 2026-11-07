@@ -1,11 +1,11 @@
 # Fail-closed rule: production runs only after a fully passing disposable install,
 # and requires the root-owned on-host wrapper to be byte-for-byte identical to
 # the reviewed source committed in this workflow revision.
-name: Build and test Wiki-only ERPNext image (isolated)
+name: Build and deploy ERPNext with Wiki (no Helpdesk or Telephony)
 
 on:
   push:
-    branches: [feat/wiki-only-20261107]
+    branches: [main]
     paths:
       - ".github/workflows/build-staging.yml"
       - "deploy/Dockerfile"
@@ -19,7 +19,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: erpnext-wiki-only-staging
+  group: erpnext-wiki-release
   cancel-in-progress: true
 
 jobs:
@@ -89,11 +89,11 @@ jobs:
           docker compose -f compose.yaml -f compose.production.yaml logs --tail=75 db backend configurator || true
 
   production:
-    name: Upgrade existing armember.ir with Wiki (disabled during staging)
+    name: Upgrade existing armember.ir with Wiki (restricted wrapper)
     needs: integration
     # Disabled while six-app image is being integrated. Re-enable only after
     # successful disposable-site test and root-owned production wrapper review.
-    if: ${{ false }} # Staging only. Production deployment explicitly disabled.
+    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45
@@ -116,8 +116,8 @@ jobs:
             exit 1
           }
           sudo -n -l >/dev/null
-          # Refuse a stale root-owned helper: the previous release knew only
-          # about HRMS/Iran/Bisness Core and would skip CRM/Insights.
+          # Refuse a stale root-owned helper: the current release must explicitly
+          # install Wiki while excluding Helpdesk and Telephony.
           if ! cmp -s /usr/local/sbin/erpnext-gha-release deploy/scripts/upgrade-existing-production.sh; then
             echo "Server wrapper is out of date. Update it from the reviewed repository and run the root-only bootstrap script." >&2
             exit 1
