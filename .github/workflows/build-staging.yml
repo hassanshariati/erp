@@ -1,11 +1,11 @@
 # Fail-closed rule: production runs only after a fully passing disposable install,
 # and requires the root-owned on-host wrapper to be byte-for-byte identical to
 # the reviewed source committed in this workflow revision.
-name: Build and test ERPNext with CRM and Insights (isolated)
+name: Build and test Wiki-only ERPNext image (isolated)
 
 on:
   push:
-    branches: [main]
+    branches: [feat/wiki-only-20261107]
     paths:
       - ".github/workflows/build-staging.yml"
       - "deploy/Dockerfile"
@@ -19,7 +19,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: erpnext-six-app-staging
+  group: erpnext-wiki-only-staging
   cancel-in-progress: true
 
 jobs:
@@ -53,12 +53,12 @@ jobs:
           HOST_HTTP_PORT=18080
           ENV
 
-      - name: Build reviewed ERPNext image including CRM and Insights
+      - name: Build ERPNext image with Wiki but without Telephony
         run: |
           set -Eeuo pipefail
           docker build --progress=plain --build-arg ERPNEXT_VERSION=v16.53.0 -t erpci/erpnext:staging -f deploy/Dockerfile .
 
-      - name: Verify six-app image
+      - name: Verify Wiki-only image
         run: bash deploy/scripts/verify-image.sh
 
       - name: Verify installed apps on disposable site
@@ -89,11 +89,11 @@ jobs:
           docker compose -f compose.yaml -f compose.production.yaml logs --tail=75 db backend configurator || true
 
   production:
-    name: Upgrade existing armember.ir with CRM and Insights (restricted wrapper)
+    name: Upgrade existing armember.ir with Wiki (disabled during staging)
     needs: integration
     # Disabled while six-app image is being integrated. Re-enable only after
     # successful disposable-site test and root-owned production wrapper review.
-    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
+    if: ${{ false }} # Staging only. Production deployment explicitly disabled.
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45
