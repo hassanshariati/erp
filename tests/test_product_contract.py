@@ -59,7 +59,7 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn("ARG ERPNEXT_VERSION=v16.53.0", source)
         self.assertIn("ARG HRMS_REF=v16.53.0", source)
         self.assertIn("b12d935b99c1434618845fdd9f3a3d340b5a3aed", source)
-        self.assertIn("60dc7b8b51f42a74ba65bee314922326788db59b", source)
+        self.assertIn("7de4bf520a459d2183086031c9bbad0bd99995ef", source)
         self.assertIn('git -C apps/hrms rev-parse HEAD', source)
         self.assertIn('git -C apps/erpnext_iran rev-parse HEAD', source)
         self.assertIn("638bf3db23e7142870819a213368e028866b79b1", source)

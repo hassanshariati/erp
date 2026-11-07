@@ -17,7 +17,7 @@ ARG HRMS_SHA=b12d935b99c1434618845fdd9f3a3d340b5a3aed
 # Iran localization: pin to the commit tested by the successful v16 CI run.
 # The branch HEAD must match; builds fail closed when upstream moves.
 ARG IRAN_REF=main
-ARG IRAN_SHA=60dc7b8b51f42a74ba65bee314922326788db59b
+ARG IRAN_SHA=7de4bf520a459d2183086031c9bbad0bd99995ef
 
 RUN bench get-app --branch "${HRMS_REF}" https://github.com/frappe/hrms.git \
     && test "$(git -C apps/hrms rev-parse HEAD)" = "${HRMS_SHA}" \
