@@ -36,6 +36,14 @@ RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
     && bench get-app --branch "${INSIGHTS_REF}" https://github.com/frappe/insights.git \
     && test "$(git -C apps/insights rev-parse HEAD)" = "${INSIGHTS_SHA}"
 
+# Frappe Wiki (v16-compatible development branch).
+# Telephony and Helpdesk are deliberately NOT included per operator request.
+ARG WIKI_REF=develop
+ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
+
+RUN bench get-app --branch "${WIKI_REF}" https://github.com/frappe/wiki.git \
+    && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}"
+
 COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_core
 
 RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
@@ -50,5 +58,5 @@ USER frappe
 WORKDIR /home/frappe/frappe-bench
 
 LABEL org.opencontainers.image.title="Generic ERPNext business stack"
-LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights"
+LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights + Wiki"
 

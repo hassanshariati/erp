@@ -11,7 +11,7 @@ set +a
 
 COMPOSE=(docker compose -f compose.yaml -f compose.production.yaml)
 installed="$("${COMPOSE[@]}" exec -T backend bench --site "$SITE_NAME" list-apps)"
-for app in erpnext hrms erpnext_iran bisness_core crm insights; do
+for app in erpnext hrms erpnext_iran bisness_core crm insights wiki; do
   printf '%s\n' "$installed" | grep -Eq "^$app([[:space:]]|$)" || {
     echo "Missing installed app on site: $app"; exit 1;
   }
@@ -33,4 +33,15 @@ for path in crm insights; do
     *) echo "Unexpected route response for /$path: $response_code" >&2; exit 1 ;;
   esac
 done
-echo "Six-app site, protected CRM/Insights routes and private HTTP smoke checks passed."
+# Wiki's app shell exists even before a Wiki Space is created.
+# Unauthenticated clients may be redirected or forbidden.
+code="$(curl --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
+  --output /dev/null --write-out '%{http_code}' \
+  -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/wiki-app")"
+echo "/wiki-app unauthenticated HTTP $code"
+case "$code" in
+  200|301|302|303|401|403) ;;
+  *) echo "Wiki app route returned an unexpected HTTP status: $code" >&2; exit 1 ;;
+esac
+echo "ERPNext, CRM, Insights and Wiki disposable-site checks passed."
