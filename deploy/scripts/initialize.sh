@@ -80,7 +80,7 @@ trap - EXIT
 
 # Ordered app installation: ERPNext first, then HRMS, Iran, business core, CRM, Insights.
 "${COMPOSE[@]}" run --rm --no-deps -e SITE_NAME="$SITE_NAME" backend bash -lc \
-  'for app in hrms erpnext_iran bisness_core crm insights; do
+  'for app in hrms erpnext_iran bisness_core crm insights wiki; do
      bench --site "$SITE_NAME" install-app "$app" || exit $?
    done
    bench --site "$SITE_NAME" list-apps'

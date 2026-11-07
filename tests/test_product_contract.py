@@ -59,7 +59,7 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn("ARG ERPNEXT_VERSION=v16.53.0", source)
         self.assertIn("ARG HRMS_REF=v16.53.0", source)
         self.assertIn("b12d935b99c1434618845fdd9f3a3d340b5a3aed", source)
-        self.assertIn("60dc7b8b51f42a74ba65bee314922326788db59b", source)
+        self.assertIn("7de4bf520a459d2183086031c9bbad0bd99995ef", source)
         self.assertIn('git -C apps/hrms rev-parse HEAD', source)
         self.assertIn('git -C apps/erpnext_iran rev-parse HEAD', source)
         self.assertIn("638bf3db23e7142870819a213368e028866b79b1", source)
@@ -68,6 +68,10 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn("ARG INSIGHTS_REF=version-3", source)
         self.assertIn('git -C apps/crm rev-parse HEAD', source)
         self.assertIn('git -C apps/insights rev-parse HEAD', source)
+        self.assertIn("2abd7795b4e6069a05a45ac04226068ef831feac", source)
+        self.assertIn('git -C apps/wiki rev-parse HEAD', source)
+        self.assertNotIn("https://github.com/frappe/telephony.git", source)
+        self.assertNotIn("https://github.com/frappe/helpdesk.git", source)
 
     def test_default_http_is_private_and_site_is_parameterized(self) -> None:
         """Public HTTP or a fixed tenant site must break this test."""
@@ -96,7 +100,7 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn('CONFIRM_INITIALIZE', script)
         self.assertIn('test -e "sites/$SITE_NAME"', script)
         self.assertIn("An existing or partial site was found.", script)
-        self.assertIn('for app in hrms erpnext_iran bisness_core crm insights;', script)
+        self.assertIn('for app in hrms erpnext_iran bisness_core crm insights wiki;', script)
 
 
 if __name__ == "__main__":

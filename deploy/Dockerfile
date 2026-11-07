@@ -17,7 +17,7 @@ ARG HRMS_SHA=b12d935b99c1434618845fdd9f3a3d340b5a3aed
 # Iran localization: pin to the commit tested by the successful v16 CI run.
 # The branch HEAD must match; builds fail closed when upstream moves.
 ARG IRAN_REF=main
-ARG IRAN_SHA=60dc7b8b51f42a74ba65bee314922326788db59b
+ARG IRAN_SHA=7de4bf520a459d2183086031c9bbad0bd99995ef
 
 RUN bench get-app --branch "${HRMS_REF}" https://github.com/frappe/hrms.git \
     && test "$(git -C apps/hrms rev-parse HEAD)" = "${HRMS_SHA}" \
@@ -36,6 +36,19 @@ RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
     && bench get-app --branch "${INSIGHTS_REF}" https://github.com/frappe/insights.git \
     && test "$(git -C apps/insights rev-parse HEAD)" = "${INSIGHTS_SHA}"
 
+# Frappe Wiki (v16-compatible development branch).
+# Telephony and Helpdesk are deliberately NOT included per operator request.
+ARG WIKI_REF=develop
+ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
+
+# Wiki's Vite socket client imports socketio_port as a named JSON export
+# during its automatic bench get-app asset build. Set the same value used by
+# our production configurator (it will reapply this setting at runtime).
+RUN bench set-config -gp socketio_port 9000
+
+RUN bench get-app --branch "${WIKI_REF}" https://github.com/frappe/wiki.git \
+    && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}"
+
 COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_core
 
 RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
@@ -50,5 +63,5 @@ USER frappe
 WORKDIR /home/frappe/frappe-bench
 
 LABEL org.opencontainers.image.title="Generic ERPNext business stack"
-LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights"
+LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights + Wiki"
 

@@ -33,7 +33,7 @@ class DeploymentHandoffTests(unittest.TestCase):
     def test_image_and_site_verification_are_explicit(self) -> None:
         image_check = (DEPLOY / "scripts" / "verify-image.sh").read_text(encoding="utf-8")
         site_check = (DEPLOY / "scripts" / "smoke-site.sh").read_text(encoding="utf-8")
-        for app in ("erpnext", "hrms", "erpnext_iran", "bisness_core", "crm", "insights"):
+        for app in ("erpnext", "hrms", "erpnext_iran", "bisness_core", "crm", "insights", "wiki"):
             self.assertIn(app, image_check)
             self.assertIn(app, site_check)
 
@@ -45,9 +45,12 @@ class DeploymentHandoffTests(unittest.TestCase):
     def test_existing_production_upgrade_installs_new_apps_after_backup(self) -> None:
         upgrade = (DEPLOY / "scripts" / "upgrade-existing-production.sh").read_text(encoding="utf-8")
         self.assertIn("bench --site armember.ir backup --with-files", upgrade)
-        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights;", upgrade)
+        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights wiki;", upgrade)
         self.assertIn("bench --site armember.ir migrate", upgrade)
-        self.assertIn("Six-app ERPNext upgrade", upgrade)
+        self.assertIn("Wiki-only ERPNext upgrade", upgrade)
+        self.assertIn("for app in hrms erpnext_iran bisness_core crm insights wiki;", upgrade)
+        self.assertNotIn("install-app helpdesk", upgrade)
+        self.assertNotIn("install-app telephony", upgrade)
         self.assertNotIn("docker compose down -v", upgrade)
 
     def test_image_build_has_separate_compiler_stage(self) -> None:

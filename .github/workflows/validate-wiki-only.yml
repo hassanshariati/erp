@@ -1,0 +1,36 @@
+name: Validate Wiki-only upgrade (staging only)
+
+on:
+  push:
+    branches: [feat/wiki-only-20261107]
+    paths:
+      - ".github/workflows/validate-wiki-only.yml"
+      - "deploy/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Python safety contracts
+        run: python3 -m unittest discover -s tests -v
+      - name: Bash syntax validation
+        run: bash -n deploy/scripts/*.sh
+      - name: Assert no Telephony or Helpdesk installation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ! grep -q 'https://github.com/frappe/telephony.git' deploy/Dockerfile
+          ! grep -q 'https://github.com/frappe/helpdesk.git' deploy/Dockerfile
+          ! grep -E 'for app in .* wiki; do' deploy/scripts/upgrade-existing-production.sh
+          echo "Wiki-only application image and guarded migration verified."
