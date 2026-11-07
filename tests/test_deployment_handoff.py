@@ -33,7 +33,7 @@ class DeploymentHandoffTests(unittest.TestCase):
     def test_image_and_site_verification_are_explicit(self) -> None:
         image_check = (DEPLOY / "scripts" / "verify-image.sh").read_text(encoding="utf-8")
         site_check = (DEPLOY / "scripts" / "smoke-site.sh").read_text(encoding="utf-8")
-        for app in ("erpnext", "hrms", "erpnext_iran", "bisness_core", "crm", "insights"):
+        for app in ("erpnext", "hrms", "erpnext_iran", "bisness_core", "crm", "insights", "telephony", "helpdesk", "wiki"):
             self.assertIn(app, image_check)
             self.assertIn(app, site_check)
 

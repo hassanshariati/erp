@@ -11,7 +11,7 @@ set +a
 
 COMPOSE=(docker compose -f compose.yaml -f compose.production.yaml)
 installed="$("${COMPOSE[@]}" exec -T backend bench --site "$SITE_NAME" list-apps)"
-for app in erpnext hrms erpnext_iran bisness_core crm insights; do
+for app in erpnext hrms erpnext_iran bisness_core crm insights telephony helpdesk wiki; do
   printf '%s\n' "$installed" | grep -Eq "^$app([[:space:]]|$)" || {
     echo "Missing installed app on site: $app"; exit 1;
   }
@@ -33,4 +33,17 @@ for path in crm insights; do
     *) echo "Unexpected route response for /$path: $response_code" >&2; exit 1 ;;
   esac
 done
-echo "Six-app site, protected CRM/Insights routes and private HTTP smoke checks passed."
+# Helpdesk requires authentication; Wiki may need a Wiki Space configured
+# before the app shell can render. Confirm no 404/5xx on their app entrypoints.
+for path in helpdesk wiki-app; do
+  response_code="$(curl --silent --show-error --max-time 15 \
+    --retry 12 --retry-delay 5 --retry-connrefused \
+    --output /dev/null --write-out '%{http_code}' \
+    -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/$path")"
+  echo "/$path unauthenticated HTTP $response_code"
+  case "$response_code" in
+    200|301|302|303|401|403) ;;
+    *) echo "Unexpected route response for /$path: $response_code" >&2; exit 1 ;;
+  esac
+done
+echo "ERPNext, CRM, Insights, Helpdesk, Telephony and Wiki staging site passes smoke checks."

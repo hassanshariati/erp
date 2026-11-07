@@ -1,11 +1,11 @@
 # Fail-closed rule: production runs only after a fully passing disposable install,
 # and requires the root-owned on-host wrapper to be byte-for-byte identical to
 # the reviewed source committed in this workflow revision.
-name: Build and test ERPNext with CRM and Insights (isolated)
+name: Test Frappe Helpdesk and Wiki on Frappe 16 (isolated)
 
 on:
   push:
-    branches: [main]
+    branches: [feat/v16-app-catalog-20261107]
     paths:
       - ".github/workflows/build-staging.yml"
       - "deploy/Dockerfile"
@@ -19,7 +19,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: erpnext-six-app-staging
+  group: erpnext-helpdesk-wiki-staging
   cancel-in-progress: true
 
 jobs:
@@ -53,12 +53,12 @@ jobs:
           HOST_HTTP_PORT=18080
           ENV
 
-      - name: Build reviewed ERPNext image including CRM and Insights
+      - name: Build ERPNext image including Helpdesk, Telephony and Wiki
         run: |
           set -Eeuo pipefail
           docker build --progress=plain --build-arg ERPNEXT_VERSION=v16.53.0 -t erpci/erpnext:staging -f deploy/Dockerfile .
 
-      - name: Verify six-app image
+      - name: Verify Helpdesk and Wiki image
         run: bash deploy/scripts/verify-image.sh
 
       - name: Verify installed apps on disposable site
@@ -93,7 +93,7 @@ jobs:
     needs: integration
     # Disabled while six-app image is being integrated. Re-enable only after
     # successful disposable-site test and root-owned production wrapper review.
-    if: github.ref == 'refs/heads/main' && github.actor == 'hassanshariati'
+    if: ${{ false }} # Staging-only feature branch: never modify production
     runs-on: [self-hosted, linux, x64, erpnext-deploy]
     environment: production
     timeout-minutes: 45

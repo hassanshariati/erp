@@ -36,6 +36,23 @@ RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
     && bench get-app --branch "${INSIGHTS_REF}" https://github.com/frappe/insights.git \
     && test "$(git -C apps/insights rev-parse HEAD)" = "${INSIGHTS_SHA}"
 
+# Helpdesk requires Telephony. Frappe Wiki develop advertises Frappe v16
+# compatibility. Pin each upstream commit and fail before image publication
+# if an upstream moving branch changes.
+ARG TELEPHONY_REF=develop
+ARG TELEPHONY_SHA=9447577500a25d242088398157b72c654fa34b20
+ARG HELPDESK_REF=main
+ARG HELPDESK_SHA=0503116a499ed38fcf290c3f270753f1fdd0c6ad
+ARG WIKI_REF=develop
+ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
+
+RUN bench get-app --branch "${TELEPHONY_REF}" https://github.com/frappe/telephony.git \
+    && test "$(git -C apps/telephony rev-parse HEAD)" = "${TELEPHONY_SHA}" \
+    && bench get-app --branch "${HELPDESK_REF}" https://github.com/frappe/helpdesk.git \
+    && test "$(git -C apps/helpdesk rev-parse HEAD)" = "${HELPDESK_SHA}" \
+    && bench get-app --branch "${WIKI_REF}" https://github.com/frappe/wiki.git \
+    && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}"
+
 COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_core
 
 RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
@@ -50,5 +67,5 @@ USER frappe
 WORKDIR /home/frappe/frappe-bench
 
 LABEL org.opencontainers.image.title="Generic ERPNext business stack"
-LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights"
+LABEL org.opencontainers.image.description="ERPNext + HRMS + Iranian localization + Bisness Core + CRM + Insights + Helpdesk + Wiki + Telephony"
 
