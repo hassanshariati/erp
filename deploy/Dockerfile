@@ -41,6 +41,11 @@ RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
 ARG WIKI_REF=develop
 ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
 
+# Wiki's Vite socket client imports socketio_port as a named JSON export
+# during its automatic bench get-app asset build. Set the same value used by
+# our production configurator (it will reapply this setting at runtime).
+RUN bench set-config -gp socketio_port 9000
+
 RUN bench get-app --branch "${WIKI_REF}" https://github.com/frappe/wiki.git \
     && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}"
 
