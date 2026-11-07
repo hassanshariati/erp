@@ -1,0 +1,27 @@
+name: Validate Helpdesk Wiki upgrade (staging only)
+on:
+  push:
+    branches: [feat/v16-app-catalog-20261107]
+    paths:
+      - ".github/workflows/validate-helpdesk-wiki.yml"
+permissions:
+  contents: read
+jobs:
+  read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Contract tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Shell syntax
+        run: bash -n deploy/scripts/*.sh
+      - name: No automatic production deploy on this branch
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          grep -Fq 'if: ${{ false }}' .github/workflows/build-staging.yml
+          echo 'Production deployment disabled for feature branch.'
