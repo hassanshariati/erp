@@ -18,5 +18,7 @@ docker run --rm --entrypoint bash "$IMAGE" -lc '
     test -d "apps/$app" || { echo "Missing app: $app"; exit 1; }
   done
   ./env/bin/python -m pip show hrms erpnext_iran bisness_core crm insights wiki >/dev/null
+  test -s assets/bisness_core/css/login-theme.css || { echo "Missing packaged login CSS"; exit 1; }
+  test -s assets/bisness_core/images/login-visual.svg || { echo "Missing packaged login illustration"; exit 1; }
   echo "Wiki-only image package check passed."
 '

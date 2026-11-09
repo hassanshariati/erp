@@ -24,6 +24,11 @@ class LoginThemeTests(unittest.TestCase):
             declared["web_include_css"],
         )
         self.assertTrue((APP / "public" / "css" / "login-theme.css").is_file())
+        dockerfile = (ROOT / "deploy" / "Dockerfile").read_text(encoding="utf-8")
+        self.assertIn("cp -a apps/bisness_core/bisness_core/public/. assets/bisness_core/", dockerfile)
+        image_check = (ROOT / "deploy" / "scripts" / "verify-image.sh").read_text(encoding="utf-8")
+        self.assertIn("assets/bisness_core/css/login-theme.css", image_check)
+        self.assertIn("assets/bisness_core/images/login-visual.svg", image_check)
 
     def test_theme_is_only_visual_and_keeps_frappes_native_forms(self) -> None:
         css = (APP / "public" / "css" / "login-theme.css").read_text(encoding="utf-8")

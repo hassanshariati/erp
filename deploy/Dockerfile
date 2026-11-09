@@ -63,7 +63,14 @@ COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_c
 RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
     && bench build \
     && cp -r sites/assets/. assets/ \
-    && rm -rf sites/assets
+    && rm -rf sites/assets \
+    # Copy the custom app's public files as real files: no dependence on
+    # whether bench linked this hand-copied app in sites/assets.
+    && rm -rf assets/bisness_core \
+    && mkdir -p assets/bisness_core \
+    && cp -a apps/bisness_core/bisness_core/public/. assets/bisness_core/ \
+    && test -s assets/bisness_core/css/login-theme.css \
+    && test -s assets/bisness_core/images/login-visual.svg
 
 # Preserve the official runtime entrypoint, web-server utilities and volumes.
 FROM runtime AS final
