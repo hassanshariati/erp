@@ -123,6 +123,15 @@ jobs:
             exit 1
           fi
 
+      - name: Install reviewed apps onto the existing ERPNext site
+        shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_IMAGE: ghcr.io/hassanshariati/erp:apps-${{ github.sha }}
+        run: |
+          set -Eeuo pipefail
+          printf '%s\n' "$GHCR_TOKEN" | sudo -n /usr/local/sbin/erpnext-gha-release "$RELEASE_IMAGE"
+
       - name: Verify production login and login theme assets
         shell: bash
         run: |
@@ -139,12 +148,3 @@ jobs:
           svg="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/images/login-visual.svg)"
           [[ "$svg" == *'<svg'* ]] || { echo "Production login artwork not served" >&2; exit 1; }
           echo "Production native login form and theme assets are healthy."
-
-      - name: Install reviewed apps onto the existing ERPNext site
-        shell: bash
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_IMAGE: ghcr.io/hassanshariati/erp:apps-${{ github.sha }}
-        run: |
-          set -Eeuo pipefail
-          printf '%s\n' "$GHCR_TOKEN" | sudo -n /usr/local/sbin/erpnext-gha-release "$RELEASE_IMAGE"
