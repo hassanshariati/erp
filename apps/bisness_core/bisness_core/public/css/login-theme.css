@@ -320,3 +320,162 @@ html[lang^="ar"] #page-login .page_content > div > section {
     transition: none;
   }
 }
+
+/* Tenant branding: the existing static illustration remains a safe fallback. */
+#page-login .page_content > div.bisness-login-has-hero::before {
+  display: none;
+}
+
+#page-login .bisness-login-hero {
+  box-sizing: border-box;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 510px;
+  padding: clamp(22px, 4vw, 50px);
+  overflow: hidden;
+  border: 1px solid rgba(124, 204, 160, 0.17);
+  border-radius: 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(47, 174, 118, .17), transparent 45%),
+    linear-gradient(135deg, #080f0b, #060d09 65%, #09140e);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .38), 0 0 80px rgba(37, 119, 75, .08);
+}
+
+#page-login .bisness-login-hero-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 330px);
+  aspect-ratio: 1 / 1;
+  isolation: isolate;
+}
+
+#page-login .bisness-login-hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--bisness-green);
+  opacity: .15;
+  filter: blur(44px);
+  animation: bisness-orbit-glow 5s ease-in-out infinite alternate;
+}
+
+#page-login .bisness-login-orbit {
+  position: absolute;
+  border: 1px solid rgba(88, 226, 163, .28);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#page-login .bisness-login-orbit::after {
+  content: "";
+  position: absolute;
+  top: 9%;
+  left: 15%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bisness-green);
+  box-shadow: 0 0 12px var(--bisness-green);
+}
+
+#page-login .bisness-login-orbit--outer {
+  inset: 8%;
+  border-right-color: transparent;
+  border-bottom-color: rgba(88, 226, 163, .08);
+  animation: bisness-orbit 18s linear infinite;
+}
+
+#page-login .bisness-login-orbit--inner {
+  inset: 16%;
+  border-left-color: transparent;
+  border-top-color: rgba(88, 226, 163, .1);
+  animation: bisness-orbit 12s linear infinite reverse;
+}
+
+#page-login .bisness-login-mark {
+  width: 57%;
+  max-height: 57%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 30px rgba(24, 164, 103, .26));
+  animation: bisness-mark-float 4.5s ease-in-out infinite alternate;
+}
+
+#page-login .bisness-login-brand-name {
+  display: block;
+  width: 100%;
+  overflow-wrap: anywhere;
+  color: #f1fbf4;
+  font-size: clamp(20px, 2.2vw, 29px);
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+#page-login .bisness-login-brand-tagline {
+  margin: 10px 0 0;
+  color: var(--bisness-muted);
+  font-size: 14px;
+}
+
+#page-login .bisness-login-brand-tagline[hidden] {
+  display: none;
+}
+
+#page-login .bisness-login-uploaded-media {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 22px;
+}
+
+@keyframes bisness-orbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bisness-orbit-glow {
+  from { opacity: .12; transform: scale(.82); }
+  to { opacity: .24; transform: scale(1.15); }
+}
+
+@keyframes bisness-mark-float {
+  from { transform: translateY(5px) scale(.98); }
+  to { transform: translateY(-6px) scale(1.02); }
+}
+
+@media (max-width: 850px) {
+  #page-login .bisness-login-hero {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 200px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  #page-login .bisness-login-hero-stage {
+    width: min(100%, 146px);
+  }
+
+  #page-login .bisness-login-brand-name { font-size: 18px; }
+  #page-login .bisness-login-brand-tagline { font-size: 11px; margin-top: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-login .bisness-login-orbit,
+  #page-login .bisness-login-hero-stage::before,
+  #page-login .bisness-login-mark {
+    animation: none;
+  }
+}

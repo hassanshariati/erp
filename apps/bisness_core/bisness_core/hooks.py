@@ -16,4 +16,5 @@ required_apps = ["erpnext", "hrms", "erpnext_iran"]
 # Do not replace frappe/www/login.html: that page owns the supported login,
 # reset-password, LDAP and social-authentication workflows.
 web_include_css = ["/assets/bisness_core/css/login-theme.css"]
+web_include_js = ["/assets/bisness_core/js/login-branding.js"]
 

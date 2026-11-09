@@ -1,1 +1,1 @@
-"""Bisness Core Frappe module; business DocTypes are added here."""
+"""Bisness Core module."""
