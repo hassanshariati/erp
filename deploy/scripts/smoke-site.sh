@@ -73,5 +73,26 @@ login_visual="$(curl --fail --silent --show-error --max-time 15 \
 [[ "$login_visual" == *'<svg'* ]] || {
   echo "Login theme SVG asset is not served correctly." >&2; exit 1;
 }
+# Validate tenant branding functionality, not just the previous static theme.
+for path in \
+  assets/bisness_core/js/login-branding.js \
+  assets/bisness_core/images/login-mark.svg; do
+  body="$(curl --fail --silent --show-error --max-time 15 \
+    --retry 12 --retry-delay 5 --retry-connrefused \
+    -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/$path")"
+  case "$path" in
+    *.js) [[ "$body" == *"get_login_branding"* ]] || { echo "Branding JS not served" >&2; exit 1; } ;;
+    *.svg) [[ "$body" == *"<svg"* ]] || { echo "Branding logo SVG not served" >&2; exit 1; } ;;
+  esac
+done
+[[ "$login_html" == *"login-branding.js"* ]] || { echo "Login page does not load branding script" >&2; exit 1; }
+branding="$(curl --fail --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
+  -H "Host: $SITE_NAME" \
+  "http://127.0.0.1:$HOST_HTTP_PORT/api/method/bisness_core.api.branding.get_login_branding")"
+[[ "$branding" == *'"brand_name"'* && "$branding" == *'"accent_color"'* ]] || {
+  echo "Guest branding API does not return expected public data" >&2; exit 1;
+}
+echo "Tenant branding JS, icon, guest API, and native Frappe login are healthy."
 echo "Native Frappe login and new theme assets served successfully."
 echo "ERPNext, CRM, Insights and Wiki disposable-site checks passed."

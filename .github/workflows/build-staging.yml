@@ -147,4 +147,14 @@ jobs:
           [[ "$css" == *'#page-login'* ]] || { echo "Production login CSS not served" >&2; exit 1; }
           svg="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/images/login-visual.svg)"
           [[ "$svg" == *'<svg'* ]] || { echo "Production login artwork not served" >&2; exit 1; }
+          [[ "$login_html" == *"login-branding.js"* ]] || { echo "Login branding script not linked" >&2; exit 1; }
+          branding_js="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/js/login-branding.js)"
+          [[ "$branding_js" == *"get_login_branding"* ]] || { echo "Login branding JS not served" >&2; exit 1; }
+          brand_svg="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/images/login-mark.svg)"
+          [[ "$brand_svg" == *'<svg'* ]] || { echo "Login branding mark not served" >&2; exit 1; }
+          branding_api="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/api/method/bisness_core.api.branding.get_login_branding)"
+          [[ "$branding_api" == *'"brand_name"'* && "$branding_api" == *'"accent_color"'* ]] || {
+            echo "Guest branding settings API unavailable" >&2; exit 1;
+          }
+          echo "Production tenant branding API, JS, SVG and native login are healthy."
           echo "Production native login form and theme assets are healthy."
