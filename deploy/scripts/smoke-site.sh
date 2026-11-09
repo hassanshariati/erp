@@ -47,7 +47,8 @@ esac
 # Regression guard for the shared login experience: keep Frappe's native
 # username/password input while loading the new theme and image from assets.
 # These checks are read-only and run on the isolated staging site before publish.
-echo "Checking Frappe /login page..."\nlogin_html="$(curl --fail --silent --show-error --max-time 15 \
+echo "Checking Frappe /login page..."
+login_html="$(curl --fail --silent --show-error --max-time 15 \
   --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/login")"
 for marker in 'id="page-login"' 'id="login_email"' 'id="login_password"' 'login-theme.css'; do
@@ -56,14 +57,16 @@ for marker in 'id="page-login"' 'id="login_email"' 'id="login_password"' 'login-
     exit 1
   fi
 done
-echo "Checking packaged /assets/bisness_core/css/login-theme.css..."\nlogin_css="$(curl --fail --silent --show-error --max-time 15 \
+echo "Checking packaged /assets/bisness_core/css/login-theme.css..."
+login_css="$(curl --fail --silent --show-error --max-time 15 \
   --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" \
   "http://127.0.0.1:$HOST_HTTP_PORT/assets/bisness_core/css/login-theme.css")"
 [[ "$login_css" == *'#page-login'* ]] || {
   echo "Login theme CSS asset is not served correctly." >&2; exit 1;
 }
-echo "Checking packaged /assets/bisness_core/images/login-visual.svg..."\nlogin_visual="$(curl --fail --silent --show-error --max-time 15 \
+echo "Checking packaged /assets/bisness_core/images/login-visual.svg..."
+login_visual="$(curl --fail --silent --show-error --max-time 15 \
   --retry 12 --retry-delay 5 --retry-connrefused \
   -H "Host: $SITE_NAME" \
   "http://127.0.0.1:$HOST_HTTP_PORT/assets/bisness_core/images/login-visual.svg")"
