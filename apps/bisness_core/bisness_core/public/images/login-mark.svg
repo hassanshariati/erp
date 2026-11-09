@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" fill="none" role="img" aria-label="Generic business platform mark">
+  <defs>
+    <linearGradient id="tile" x1="24" y1="12" x2="185" y2="215" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2C8E6A"/>
+      <stop offset="1" stop-color="#0D2A1F"/>
+    </linearGradient>
+    <linearGradient id="glyph" x1="62" y1="61" x2="155" y2="157" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C2FFDE"/>
+      <stop offset="1" stop-color="#4AE6A1"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="200" height="200" rx="46" fill="url(#tile)" stroke="#82F2BA" stroke-opacity=".65" stroke-width="2"/>
+  <path d="M51 69H110L131 91H169L149 114H122L100 91H71L51 69Z" fill="url(#glyph)"/>
+  <path d="M51 107H107L127 128H169L149 151H118L97 129H70L51 107Z" fill="url(#glyph)" opacity=".86"/>
+  <path d="M51 146H93L72 169H51L72 146H51Z" fill="#A7FFD5"/>
+</svg>
