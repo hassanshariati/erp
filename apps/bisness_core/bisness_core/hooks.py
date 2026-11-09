@@ -11,3 +11,9 @@ app_license = "License pending"
 
 # These apps must be installed before bisness_core.
 required_apps = ["erpnext", "hrms", "erpnext_iran"]
+
+# Apply the product's login-only visual layer to Frappe's native website login.
+# Do not replace frappe/www/login.html: that page owns the supported login,
+# reset-password, LDAP and social-authentication workflows.
+web_include_css = ["/assets/bisness_core/css/login-theme.css"]
+

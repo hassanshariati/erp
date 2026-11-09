@@ -131,3 +131,20 @@ jobs:
         run: |
           set -Eeuo pipefail
           printf '%s\n' "$GHCR_TOKEN" | sudo -n /usr/local/sbin/erpnext-gha-release "$RELEASE_IMAGE"
+
+      - name: Verify production login and login theme assets
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          login_html="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/login)"
+          for marker in 'id="page-login"' 'id="login_email"' 'id="login_password"' 'login-theme.css'; do
+            [[ "$login_html" == *"$marker"* ]] || {
+              echo "Production login page is missing: $marker" >&2
+              exit 1
+            }
+          done
+          css="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/css/login-theme.css)"
+          [[ "$css" == *'#page-login'* ]] || { echo "Production login CSS not served" >&2; exit 1; }
+          svg="$(curl --fail --silent --show-error --retry 6 --retry-delay 5 --max-time 15 https://armember.ir/assets/bisness_core/images/login-visual.svg)"
+          [[ "$svg" == *'<svg'* ]] || { echo "Production login artwork not served" >&2; exit 1; }
+          echo "Production native login form and theme assets are healthy."
