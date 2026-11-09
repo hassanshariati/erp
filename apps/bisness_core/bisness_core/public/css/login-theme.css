@@ -1,0 +1,322 @@
+/*
+ * Bisness Core login theme: visual parity with the internal dark-green
+ * two-panel design. Frappe's original login HTML and handlers remain intact.
+ * Every selector is restricted to the /login website route.
+ */
+:root:has(#page-login) {
+  color-scheme: dark;
+}
+
+body:has(#page-login) {
+  margin: 0;
+  background: #080d0a;
+  color: #edf4ef;
+  font-family: "Vazirmatn Variable", Vazirmatn, Tahoma, Arial, sans-serif;
+}
+
+#page-login {
+  --bisness-green: #35c991;
+  --bisness-green-strong: #22b77e;
+  --bisness-text: #edf4ef;
+  --bisness-muted: #9caea3;
+  --bisness-border: rgba(211, 234, 218, 0.13);
+  --bisness-card: rgba(17, 25, 20, 0.94);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: clamp(18px, 4vw, 52px);
+  color: var(--bisness-text);
+  background:
+    radial-gradient(circle at 95% 0%, rgba(53, 201, 145, 0.12), transparent 32%),
+    radial-gradient(circle at 4% 100%, rgba(60, 104, 77, 0.10), transparent 38%),
+    linear-gradient(145deg, #080d0a 0%, #0c1410 47%, #09110d 100%);
+}
+
+#page-login .page-content-wrapper,
+#page-login main.container,
+#page-login .page_content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+#page-login .page-header-wrapper,
+#page-login .page-footer {
+  display: none;
+}
+
+/* The pseudo-element is a decorative left pane, not a second login form. */
+#page-login .page_content > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  direction: ltr;
+  gap: clamp(24px, 4.4vw, 76px);
+  align-items: center;
+  width: min(1160px, 100%);
+  min-height: min(650px, 85svh);
+  margin: 0 auto;
+}
+
+#page-login .page_content > div::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border: 1px solid rgba(124, 204, 160, 0.17);
+  border-radius: 24px;
+  background: #050a08 url("/assets/bisness_core/images/login-visual.svg") center / contain no-repeat;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.38), 0 0 80px rgba(37, 119, 75, 0.08);
+  animation: bisness-login-appear 0.55s ease-out both, bisness-login-breathe 9s ease-in-out 0.55s infinite alternate;
+}
+
+#page-login .page_content > div > section {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  direction: ltr;
+}
+
+html[dir="rtl"] #page-login .page_content > div > section,
+html[lang^="fa"] #page-login .page_content > div > section,
+html[lang^="ar"] #page-login .page_content > div > section {
+  direction: rtl;
+}
+
+#page-login .for-login,
+#page-login .for-forgot,
+#page-login .for-signup,
+#page-login .for-email-login,
+#page-login .for-login-with-email-link {
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+#page-login .login-content.page-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;
+  min-height: 0;
+  margin: 0 auto;
+  padding: clamp(24px, 3vw, 34px);
+  gap: 22px;
+  border: 1px solid var(--bisness-border);
+  border-radius: 23px;
+  background: var(--bisness-card);
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.44);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+#page-login .page-card-head {
+  align-items: flex-start;
+  padding: 0 0 19px;
+  margin: 0;
+  border-bottom: 1px solid var(--bisness-border);
+}
+
+#page-login .page-card-head .app-logo {
+  display: block;
+  width: 50px;
+  height: 50px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 13px;
+  padding: 5px;
+  background: rgba(53, 201, 145, 0.10);
+  border: 1px solid rgba(53, 201, 145, 0.28);
+}
+
+#page-login .page-card-head-text h4,
+#page-login .page-card-head h4 {
+  margin: 0;
+  color: var(--bisness-text) !important;
+  font-size: clamp(20px, 2.2vw, 24px);
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+#page-login .page-card-subtitle {
+  color: var(--bisness-muted) !important;
+  line-height: 1.75;
+  font-size: 13px;
+}
+
+#page-login .form-signin,
+#page-login .page-card-body,
+#page-login .page-card-actions {
+  width: 100%;
+  min-width: 0;
+}
+
+#page-login .form-signin {
+  gap: 21px;
+}
+
+#page-login .page-card-body {
+  gap: 18px;
+}
+
+#page-login .form-group label {
+  color: #cbd9cf !important;
+  font-weight: 550;
+  font-size: 13px;
+}
+
+#page-login .email-field,
+#page-login .password-field {
+  position: relative;
+  width: 100%;
+}
+
+#page-login .form-control {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid var(--bisness-border);
+  border-radius: 12px;
+  background: rgba(5, 12, 8, 0.76);
+  color: var(--bisness-text);
+  outline: none;
+  box-shadow: none;
+  transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+#page-login .form-control::placeholder {
+  color: #72877a;
+  opacity: 1;
+}
+
+#page-login .form-control:hover {
+  border-color: rgba(154, 216, 180, 0.30);
+}
+
+#page-login .form-control:focus,
+#page-login .form-control:focus-visible {
+  border-color: var(--bisness-green);
+  background: rgba(5, 13, 9, 0.90);
+  box-shadow: 0 0 0 3px rgba(53, 201, 145, 0.14);
+}
+
+#page-login .password-field .toggle-password {
+  color: #a8c4b2;
+  cursor: pointer;
+}
+
+#page-login .page-card-actions .es-button[data-variant="solid"] {
+  min-height: 47px;
+  border: 1px solid rgba(104, 223, 163, 0.18);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--bisness-green), var(--bisness-green-strong));
+  color: #05130a !important;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 9px 24px rgba(53, 201, 145, 0.16);
+  transition: filter .16s ease, transform .16s ease;
+}
+
+#page-login .page-card-actions .es-button[data-variant="solid"]:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+#page-login .page-card-actions .es-button[data-variant="solid"]:focus-visible {
+  outline: 3px solid rgba(53, 201, 145, 0.33);
+  outline-offset: 2px;
+}
+
+#page-login a {
+  color: #7cdcad;
+}
+
+#page-login a:hover {
+  color: #a1efc4;
+}
+
+#page-login .sign-up-message,
+#page-login .page-card .text-ink-gray-5,
+#page-login .page-card .text-ink-gray-6 {
+  color: var(--bisness-muted) !important;
+}
+
+#page-login .page-card .field-error,
+#page-login .page-card .text-ink-red-8 {
+  color: #fda4af !important;
+}
+
+#page-login .login-button-wrapper .es-button,
+#page-login .btn-login-option {
+  color: #d5e6d9 !important;
+  border: 1px solid var(--bisness-border);
+  border-radius: 11px;
+  background: rgba(29, 47, 35, 0.58);
+}
+
+@keyframes bisness-login-appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bisness-login-breathe {
+  from { box-shadow: 0 28px 90px rgba(0, 0, 0, .38), 0 0 70px rgba(37, 119, 75, .06); }
+  to { box-shadow: 0 28px 90px rgba(0, 0, 0, .38), 0 0 90px rgba(37, 119, 75, .16); }
+}
+
+@media (max-width: 850px) {
+  #page-login {
+    display: block;
+    padding: 22px 16px 38px;
+  }
+
+  #page-login .page_content > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    width: min(490px, 100%);
+    min-height: 0;
+  }
+
+  #page-login .page_content > div::before {
+    grid-column: 1;
+    grid-row: 1;
+    max-height: 215px;
+    aspect-ratio: 16 / 7;
+    border-radius: 18px;
+  }
+
+  #page-login .page_content > div > section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 440px) {
+  #page-login .login-content.page-card {
+    padding: 21px 18px;
+    border-radius: 18px;
+  }
+
+  #page-login .page_content > div::before {
+    max-height: 160px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-login .page_content > div::before {
+    animation: none;
+  }
+  #page-login .form-control,
+  #page-login .es-button {
+    transition: none;
+  }
+}
