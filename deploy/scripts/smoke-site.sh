@@ -44,4 +44,31 @@ case "$code" in
   200|301|302|303|401|403) ;;
   *) echo "Wiki app route returned an unexpected HTTP status: $code" >&2; exit 1 ;;
 esac
+# Regression guard for the shared login experience: keep Frappe's native
+# username/password input while loading the new theme and image from assets.
+# These checks are read-only and run on the isolated staging site before publish.
+login_html="$(curl --fail --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
+  -H "Host: $SITE_NAME" "http://127.0.0.1:$HOST_HTTP_PORT/login")"
+for marker in 'id="page-login"' 'id="login_email"' 'id="login_password"' 'login-theme.css'; do
+  if [[ "$login_html" != *"$marker"* ]]; then
+    echo "Login page missing expected Frappe markup or stylesheet: $marker" >&2
+    exit 1
+  fi
+done
+login_css="$(curl --fail --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
+  -H "Host: $SITE_NAME" \
+  "http://127.0.0.1:$HOST_HTTP_PORT/assets/bisness_core/css/login-theme.css")"
+[[ "$login_css" == *'#page-login'* ]] || {
+  echo "Login theme CSS asset is not served correctly." >&2; exit 1;
+}
+login_visual="$(curl --fail --silent --show-error --max-time 15 \
+  --retry 12 --retry-delay 5 --retry-connrefused \
+  -H "Host: $SITE_NAME" \
+  "http://127.0.0.1:$HOST_HTTP_PORT/assets/bisness_core/images/login-visual.svg")"
+[[ "$login_visual" == *'<svg'* ]] || {
+  echo "Login theme SVG asset is not served correctly." >&2; exit 1;
+}
+echo "Native Frappe login and new theme assets served successfully."
 echo "ERPNext, CRM, Insights and Wiki disposable-site checks passed."
