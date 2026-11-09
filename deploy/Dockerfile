@@ -14,15 +14,19 @@ WORKDIR /home/frappe/frappe-bench
 ARG HRMS_REF=v16.53.0
 ARG HRMS_SHA=b12d935b99c1434618845fdd9f3a3d340b5a3aed
 
-# Iran localization: pin to the commit tested by the successful v16 CI run.
-# The branch HEAD must match; builds fail closed when upstream moves.
-ARG IRAN_REF=main
+# Preserve the previously deployed Iranian localization revision. The
+# upstream main branch has changed; checkout the reviewed Git object BEFORE
+# installing or building any source from that repository.
 ARG IRAN_SHA=7de4bf520a459d2183086031c9bbad0bd99995ef
 
 RUN bench get-app --branch "${HRMS_REF}" https://github.com/frappe/hrms.git \
-    && test "$(git -C apps/hrms rev-parse HEAD)" = "${HRMS_SHA}" \
-    && bench get-app --branch "${IRAN_REF}" https://github.com/bijanshdevops/erpnext_iran.git \
-    && test "$(git -C apps/erpnext_iran rev-parse HEAD)" = "${IRAN_SHA}"
+    && test "$(git -C apps/hrms rev-parse HEAD)" = "${HRMS_SHA}"
+
+RUN git clone --quiet --no-checkout https://github.com/bijanshdevops/erpnext_iran.git apps/erpnext_iran \
+    && git -C apps/erpnext_iran checkout --quiet --detach "${IRAN_SHA}" \
+    && test "$(git -C apps/erpnext_iran rev-parse HEAD)" = "${IRAN_SHA}" \
+    && ./env/bin/pip install --no-cache-dir -e apps/erpnext_iran \
+    && bench build --app erpnext_iran
 
 # Version 16-compatible, reviewed upstream revisions.
 # Frappe CRM stable v1.x uses main, Frappe Insights v3 supports Frappe 16.
@@ -38,7 +42,6 @@ RUN bench get-app --branch "${CRM_REF}" https://github.com/frappe/crm.git \
 
 # Frappe Wiki (v16-compatible development branch).
 # Telephony and Helpdesk are deliberately NOT included per operator request.
-ARG WIKI_REF=develop
 ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
 
 # Wiki's Vite socket client imports socketio_port as a named JSON export
@@ -46,8 +49,14 @@ ARG WIKI_SHA=2abd7795b4e6069a05a45ac04226068ef831feac
 # our production configurator (it will reapply this setting at runtime).
 RUN bench set-config -gp socketio_port 9000
 
-RUN bench get-app --branch "${WIKI_REF}" https://github.com/frappe/wiki.git \
-    && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}"
+# Lock Wiki to the exact tested commit as well; its develop branch moves.
+# Install Python and JS dependencies only after the verified checkout.
+RUN git clone --quiet --no-checkout https://github.com/frappe/wiki.git apps/wiki \
+    && git -C apps/wiki checkout --quiet --detach "${WIKI_SHA}" \
+    && test "$(git -C apps/wiki rev-parse HEAD)" = "${WIKI_SHA}" \
+    && ./env/bin/pip install --no-cache-dir -e apps/wiki \
+    && (cd apps/wiki && yarn install --check-files) \
+    && bench build --app wiki
 
 COPY --chown=frappe:0 apps/bisness_core /home/frappe/frappe-bench/apps/bisness_core
 

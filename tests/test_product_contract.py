@@ -68,6 +68,11 @@ class GenericProductContractTests(unittest.TestCase):
         self.assertIn("ARG INSIGHTS_REF=version-3", source)
         self.assertIn('git -C apps/crm rev-parse HEAD', source)
         self.assertIn('git -C apps/insights rev-parse HEAD', source)
+        # Moving upstream branches may not silently change installed app code.
+        # Check out immutable reviewed commits before pip/yarn or asset builds.
+        for app in ("erpnext_iran", "wiki"):
+            self.assertIn(f"git -C apps/{app} checkout --quiet --detach", source)
+        self.assertIn("git clone --quiet --no-checkout", source)
         self.assertIn("2abd7795b4e6069a05a45ac04226068ef831feac", source)
         self.assertIn('git -C apps/wiki rev-parse HEAD', source)
         self.assertNotIn("https://github.com/frappe/telephony.git", source)
