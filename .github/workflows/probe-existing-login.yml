@@ -1,0 +1,27 @@
+name: Probe existing ERPNext login routes (read only)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/probe-existing-login.yml"
+
+permissions: {}
+
+jobs:
+  probe:
+    name: Check existing login route and static path
+    runs-on: [self-hosted, linux, x64, erpnext-deploy]
+    timeout-minutes: 4
+    steps:
+      - name: Inspect public GET status codes without credentials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for path in /login / / /api/method/ping /assets/bisness_core/css/login-theme.css; do
+            echo "Checking $path"
+            curl --silent --show-error --location --max-time 12 \
+              --output /dev/null --write-out 'HTTP %{http_code} URL %{url_effective}\n' \
+              "https://armember.ir$path"
+          done
+          echo "Read-only login route probe finished."
