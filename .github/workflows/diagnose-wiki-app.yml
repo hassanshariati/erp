@@ -1,0 +1,75 @@
+name: Diagnose Wiki SPA from public browser (read-only)
+on:
+  push:
+    branches: [diagnose/wiki-app-20261110]
+    paths: [".github/workflows/diagnose-wiki-app.yml"]
+permissions: {}
+jobs:
+  inspect:
+    name: Inspect public Wiki URLs and browser errors
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check Wiki and backend HTTP response
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in /api/method/ping /wiki-app /wiki-app/spaces /assets/wiki/frontend/index.html /login; do
+            echo "=== GET $path"
+            curl --silent --show-error --location --max-time 22 \
+              --output /tmp/wiki-response.html \
+              --write-out 'HTTP %{http_code}, final=%{url_effective}, content_type=%{content_type}, bytes=%{size_download}\\n' \
+              "https://armember.ir$path" || true
+            if [[ "$path" == /wiki-app* ]]; then
+              echo "--- top-level script and CSS URLs"
+              grep -Eo '(<script[^>]*>|<link[^>]*>)' /tmp/wiki-response.html | head -25 || true
+              echo "--- markers"
+              grep -Eo '(/assets/[^" ]+|csrf_token|frappe.boot|<div id="app")' /tmp/wiki-response.html | head -30 || true
+            fi
+          done
+      - name: Install browser for read-only guest test
+        shell: bash
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install chromium
+      - name: Capture browser JS exceptions and broken network requests
+        shell: bash
+        run: |
+          cat > wiki-browser-probe.cjs <<'JS'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless: true, args: ['--no-sandbox']});
+            for (const path of ['/wiki-app/spaces', '/wiki-app', '/login']) {
+              console.log('\n======== Page ' + path);
+              const context = await browser.newContext();
+              const page = await context.newPage();
+              page.on('console', msg => {
+                if (['error', 'warning'].includes(msg.type())) console.log('CONSOLE ' + msg.type() + ' ' + msg.text().slice(0, 700));
+              });
+              page.on('pageerror', error => console.log('PAGE_EXCEPTION ' + String(error).slice(0, 1400)));
+              page.on('response', res => {
+                if (res.status() >= 400) console.log('HTTP_ERROR ' + res.status() + ' ' + res.request().resourceType() + ' ' + res.url().slice(0, 300));
+              });
+              page.on('requestfailed', req => console.log('REQUEST_FAILED ' + req.url().slice(0, 300) + ' ' + JSON.stringify(req.failure())));
+              try {
+                const response = await page.goto('https://armember.ir' + path, { waitUntil: 'domcontentloaded', timeout: 35000 });
+                await page.waitForTimeout(7000);
+                console.log('NAV_HTTP ' + response?.status() + ', url=' + page.url());
+                console.log('TITLE ' + await page.title());
+                const state = await page.evaluate(() => ({
+                  appExists: !!document.querySelector('#app'),
+                  appChildCount: document.querySelector('#app')?.children.length ?? -1,
+                  appText: document.querySelector('#app')?.innerText?.slice(0, 380) ?? '',
+                  bodyText: document.body?.innerText?.slice(0, 380) ?? '',
+                  scripts: [...document.scripts].map(x => x.src).filter(Boolean).slice(0, 20),
+                  styles: [...document.querySelectorAll('link[rel=stylesheet]')].map(x=>x.href).slice(0, 16)
+                }));
+                console.log('DOM_STATE ' + JSON.stringify(state));
+              } catch (e) {
+                console.log('NAV_ERROR ' + String(e).slice(0, 1200));
+              } finally { await context.close(); }
+            }
+            await browser.close();
+          })().catch(e => { console.log('BROWSER_PROBE_ERROR ' + String(e)); process.exitCode=1; });
+          JS
+          node wiki-browser-probe.cjs
