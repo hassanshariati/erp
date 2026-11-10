@@ -158,3 +158,9 @@ jobs:
           }
           echo "Production tenant branding API, JS, SVG and native login are healthy."
           echo "Production native login form and theme assets are healthy."
+
+      - name: Verify live Wiki JavaScript and CSS bundles
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash deploy/scripts/check-wiki-assets.sh https://armember.ir

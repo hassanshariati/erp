@@ -70,7 +70,15 @@ RUN ./env/bin/pip install --no-cache-dir -e apps/bisness_core \
     && mkdir -p assets/bisness_core \
     && cp -a apps/bisness_core/bisness_core/public/. assets/bisness_core/ \
     && test -s assets/bisness_core/css/login-theme.css \
-    && test -s assets/bisness_core/images/login-visual.svg
+    && test -s assets/bisness_core/images/login-visual.svg \
+    # Frappe's bench asset links can point two directories upward from
+    # sites/assets. Relocating those symlinks into baked /assets breaks them.
+    # Ship the built Wiki Vite bundles as real files for the nginx frontend.
+    && rm -rf assets/wiki \
+    && mkdir -p assets/wiki \
+    && cp -a apps/wiki/wiki/public/. assets/wiki/ \
+    && find assets/wiki/frontend/assets -maxdepth 1 -type f -name 'index-*.js' -size +0c -print -quit | grep -q . \
+    && find assets/wiki/frontend/assets -maxdepth 1 -type f -name 'index-*.css' -size +0c -print -quit | grep -q .
 
 # Preserve the official runtime entrypoint, web-server utilities and volumes.
 FROM runtime AS final
