@@ -95,4 +95,7 @@ branding="$(curl --fail --silent --show-error --max-time 15 \
 }
 echo "Tenant branding JS, icon, guest API, and native Frappe login are healthy."
 echo "Native Frappe login and new theme assets served successfully."
+# A 200 for /wiki-app is insufficient: an empty Vue mount with missing Vite
+# assets serves an apparently working but entirely blank page.
+bash scripts/check-wiki-assets.sh "http://127.0.0.1:$HOST_HTTP_PORT" "$SITE_NAME"
 echo "ERPNext, CRM, Insights and Wiki disposable-site checks passed."
