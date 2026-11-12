@@ -11,3 +11,10 @@ Reusable Frappe/ERPNext app for organizations, regardless of their legal name or
 - License for this first-party app is intentionally not declared until the product owner decides its commercial distribution terms and reviews ERPNext's applicable GPL obligations.
 
 Future functions must be driven by verified generic use cases, security tests, and independently configured companies/sites.
+
+## Optional oil and gas demonstration pack
+
+The opt-in, company-isolated synthetic demo seeder provides operational KPIs,
+ERPNext/HRMS/CRM sample records and a private Insights v3 executive dashboard.
+It never runs automatically. See [Oil and Gas Demo](../../docs/OIL_GAS_DEMO.md)
+and [Business Branding Settings](docs/login-branding.md) before using it.
