@@ -12,7 +12,9 @@ set +a
 COMPOSE=(docker compose -f compose.yaml -f compose.production.yaml)
 installed="$("${COMPOSE[@]}" exec -T backend bench --site "$SITE_NAME" list-apps)"
 for app in erpnext hrms erpnext_iran bisness_core crm insights wiki; do
-  printf '%s\n' "$installed" | grep -Eq "^$app([[:space:]]|$)" || {
+  # A pipe into grep -q may close early and SIGPIPE the producer under pipefail.
+  # A here-string checks the exact same data without a producer process.
+  grep -Eq "^$app([[:space:]]|$)" <<< "$installed" || {
     echo "Missing installed app on site: $app"; exit 1;
   }
 done
