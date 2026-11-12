@@ -152,6 +152,12 @@
       "read": 1,
       "report": 1,
       "export": 1
+    },
+    {
+      "role": "Insights Admin",
+      "read": 1,
+      "report": 1,
+      "export": 1
     }
   ]
 }
