@@ -205,8 +205,10 @@ def _seed_crm(count, warnings):
     if not frappe.db.exists("DocType", "CRM Lead"):
         warnings.append("Frappe CRM not installed; CRM-specific examples skipped")
         return
-    lead_status = frappe.db.get_value("CRM Lead Status", {}, "name")
-    deal_status = frappe.db.get_value("CRM Deal Status", {}, "name")
+    # A random first status can be 'Lost' and requires a lost reason.
+    # Choose only an open pipeline status for newly generated leads/deals.
+    lead_status = frappe.db.get_value("CRM Lead Status", {"type": "Open"}, "name")
+    deal_status = frappe.db.get_value("CRM Deal Status", {"type": "Open"}, "name")
     if not lead_status:
         warnings.append("CRM Lead Status not configured; CRM examples skipped")
         return

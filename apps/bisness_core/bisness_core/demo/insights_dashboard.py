@@ -49,7 +49,7 @@ def _number(field, suffix="", aggregation="sum"):
 
 def _axis(field, group, chart_type="Bar", compare=None, aggregate="sum"):
     d = _dimension(group, "Month" if group == "production_date" else group,
-                   "Month" if group == "production_date" else None)
+                   "month" if group == "production_date" else None)
     columns = [_measure(field, aggregate)]
     if compare:
         columns.append(_measure(compare))
@@ -216,4 +216,62 @@ def install_insights_dashboard():
         "dashboard": dashboard_name,
         "chart_count": len(chart_names),
         "url": "/insights/workbook/" + str(workbook),
+    }
+
+
+def repair_demo_insights(confirm=None):
+    """Repair generated charts only; preserve real workbooks and user-created charts.
+
+    Older demo charts used capitalized 'Month', which Insights v3 rejects while
+    constructing the generated summarize step. Nothing is deleted or recreated.
+    """
+    if confirm != "REPAIR_DEMO_INSIGHTS":
+        frappe.throw("Confirmation REPAIR_DEMO_INSIGHTS required")
+    workbook = frappe.db.get_value("Insights Workbook", {"title": WORKBOOK_TITLE}, "name")
+    if not workbook:
+        frappe.throw("Demo Insights workbook not found; run the demo seed first")
+
+    repaired = []
+    missing = []
+    for title, _ in chart_definitions():
+        full_title = "[DEMO] " + title
+        name = frappe.db.get_value(
+            "Insights Chart v3", {"workbook": workbook, "title": full_title}, "name"
+        )
+        if not name:
+            missing.append(full_title)
+            continue
+        chart = frappe.get_doc("Insights Chart v3", name)
+        config = frappe.parse_json(chart.config) or {}
+        changed = False
+
+        def fix_month(value):
+            nonlocal changed
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    if key == "granularity" and child == "Month":
+                        value[key] = "month"
+                        changed = True
+                    else:
+                        fix_month(child)
+            elif isinstance(value, list):
+                for child in value:
+                    fix_month(child)
+
+        fix_month(config)
+        if changed:
+            chart.config = config
+            chart.save(ignore_permissions=True)
+            repaired.append(full_title)
+
+    frappe.db.commit()
+    return {
+        "workbook": workbook,
+        "dashboard": frappe.db.get_value(
+            "Insights Dashboard v3",
+            {"title": DASHBOARD_TITLE, "workbook": workbook}, "name"
+        ),
+        "repaired_charts": repaired,
+        "missing_charts": missing,
+        "note": "Open all charts in Insights to verify their rendered results.",
     }
