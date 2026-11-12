@@ -1,0 +1,70 @@
+{
+  "doctype": "DocType",
+  "name": "Business Branding Settings",
+  "module": "Bisness Core",
+  "issingle": 1,
+  "custom": 0,
+  "editable_grid": 0,
+  "track_changes": 1,
+  "field_order": [
+    "identity_section",
+    "brand_name",
+    "brand_tagline",
+    "brand_logo",
+    "accent_color",
+    "animation_section",
+    "animation_file"
+  ],
+  "fields": [
+    {
+      "fieldname": "identity_section",
+      "fieldtype": "Section Break",
+      "label": "Login Branding"
+    },
+    {
+      "fieldname": "brand_name",
+      "fieldtype": "Data",
+      "label": "Brand Name",
+      "description": "Shown under the animation on the login page. Leave empty to use the product default."
+    },
+    {
+      "fieldname": "brand_tagline",
+      "fieldtype": "Data",
+      "label": "Brand Tagline",
+      "description": "Short optional text under the brand name."
+    },
+    {
+      "fieldname": "brand_logo",
+      "fieldtype": "Attach Image",
+      "label": "Brand Logo",
+      "description": "Public logo used in the login hero and login form. Save and refresh to see the result."
+    },
+    {
+      "fieldname": "accent_color",
+      "fieldtype": "Color",
+      "label": "Accent Color",
+      "default": "#35C991"
+    },
+    {
+      "fieldname": "animation_section",
+      "fieldtype": "Section Break",
+      "label": "Login Image and Animation"
+    },
+    {
+      "fieldname": "animation_file",
+      "fieldtype": "Attach",
+      "label": "Login Image or Animation",
+      "description": "Upload a PUBLIC PNG, JPEG, WebP, GIF, SVG, MP4 or WebM. The login hero updates after Save and refresh; private uploads cannot appear on the public login page."
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 0
+    }
+  ],
+  "allow_rename": 0
+}
