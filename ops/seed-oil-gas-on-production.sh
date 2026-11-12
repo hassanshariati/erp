@@ -68,8 +68,19 @@ trap cleanup EXIT
 "${dc[@]}" exec -T backend bench --site "$SITE" execute bisness_core.demo.seed.seed_demo \
   --kwargs '{"confirm":"SEED_OIL_GAS_DEMO","company":"[DEMO] Oil & Gas Operations","days":365}'
 echo "Seed execution returned; inspecting DEMO KPI and Insights records..."
-"${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.count \
-  --args '["Demo Oil Gas KPI",{"company":"[DEMO] Oil & Gas Operations"}]'
-"${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.get_value \
-  --args '["Insights Dashboard v3",{"title":"[DEMO] Oil & Gas | Executive Command Center"},"name"]'
-echo "Review the printed seeder warnings: any missing charts or validation errors require follow-up."
+kpi_count="$("${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.count \
+  --args '["Demo Oil Gas KPI",{"company":"[DEMO] Oil & Gas Operations"}]')"
+echo "Demo KPI rows: $kpi_count"
+if [[ "$kpi_count" != "4380" ]]; then
+  echo "Expected 4,380 demo KPI rows. Please inspect seed output; backup remains at $backup_dir." >&2
+  exit 5
+fi
+dashboard_name="$("${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.get_value \
+  --args '["Insights Dashboard v3",{"title":"[DEMO] Oil & Gas | Executive Command Center"},"name"]')"
+echo "Demo Insights dashboard: $dashboard_name"
+if [[ -z "$dashboard_name" || "$dashboard_name" == "None" ]]; then
+  echo "Demo KPI rows exist, but Insights dashboard creation did not succeed. Inspect warnings." >&2
+  exit 5
+fi
+echo "Demo KPI count and dashboard are present. Verify all 18 charts in the Insights UI."
+echo "Review the printed seeder warnings: any missing CRM or HRMS examples need follow-up."
