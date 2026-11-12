@@ -1,0 +1,157 @@
+{
+  "doctype": "DocType",
+  "name": "Demo Oil Gas KPI",
+  "module": "Bisness Core",
+  "autoname": "field:record_id",
+  "allow_rename": 0,
+  "custom": 0,
+  "engine": "InnoDB",
+  "istable": 0,
+  "issingle": 0,
+  "track_changes": 0,
+  "field_order": [
+    "record_id",
+    "production_date",
+    "company",
+    "asset",
+    "region",
+    "product_line",
+    "planned_boe",
+    "actual_boe",
+    "oil_bbl",
+    "gas_mscf",
+    "revenue_usd",
+    "opex_usd",
+    "downtime_hours",
+    "water_cut_pct",
+    "emissions_tco2e",
+    "hse_events",
+    "work_orders",
+    "crew"
+  ],
+  "fields": [
+    {
+      "fieldname": "record_id",
+      "fieldtype": "Data",
+      "label": "Demo Record ID",
+      "in_list_view": 1,
+      "unique": 1,
+      "reqd": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "production_date",
+      "fieldtype": "Date",
+      "label": "Production Date",
+      "in_list_view": 1,
+      "reqd": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "asset",
+      "fieldtype": "Data",
+      "label": "Asset",
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "region",
+      "fieldtype": "Data",
+      "label": "Region",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "product_line",
+      "fieldtype": "Select",
+      "label": "Product Line",
+      "options": "Oil\nNatural Gas\nMixed",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "planned_boe",
+      "fieldtype": "Float",
+      "label": "Planned Production (boe)"
+    },
+    {
+      "fieldname": "actual_boe",
+      "fieldtype": "Float",
+      "label": "Actual Production (boe)"
+    },
+    {
+      "fieldname": "oil_bbl",
+      "fieldtype": "Float",
+      "label": "Oil Production (bbl)"
+    },
+    {
+      "fieldname": "gas_mscf",
+      "fieldtype": "Float",
+      "label": "Natural Gas Production (Mscf)"
+    },
+    {
+      "fieldname": "revenue_usd",
+      "fieldtype": "Currency",
+      "label": "Revenue (USD)",
+      "options": "USD"
+    },
+    {
+      "fieldname": "opex_usd",
+      "fieldtype": "Currency",
+      "label": "Operating Cost (USD)",
+      "options": "USD"
+    },
+    {
+      "fieldname": "downtime_hours",
+      "fieldtype": "Float",
+      "label": "Unplanned Downtime (hours)"
+    },
+    {
+      "fieldname": "water_cut_pct",
+      "fieldtype": "Percent",
+      "label": "Water Cut (%)"
+    },
+    {
+      "fieldname": "emissions_tco2e",
+      "fieldtype": "Float",
+      "label": "Estimated Emissions (tCO2e)"
+    },
+    {
+      "fieldname": "hse_events",
+      "fieldtype": "Int",
+      "label": "Safety Near Misses"
+    },
+    {
+      "fieldname": "work_orders",
+      "fieldtype": "Int",
+      "label": "Maintenance Work Orders"
+    },
+    {
+      "fieldname": "crew",
+      "fieldtype": "Int",
+      "label": "Crew on Shift"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "export": 1,
+      "report": 1
+    },
+    {
+      "role": "Insights User",
+      "read": 1,
+      "report": 1,
+      "export": 1
+    }
+  ]
+}
