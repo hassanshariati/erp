@@ -1,1 +1,2 @@
-# No schema/data migrations in the initial app skeleton.
+[pre_model_sync]
+bisness_core.patches.v0_2.rename_branding_settings
