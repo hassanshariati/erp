@@ -1,0 +1,51 @@
+{
+  "app": "bisness_core",
+  "charts": [],
+  "content": "[{\"id\":\"brandinglink\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Business Branding Settings\",\"col\":6}},{\"id\":\"metriclink\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Demo Oil Gas KPI\",\"col\":6}},{\"id\":\"brandhelp\",\"type\":\"text\",\"data\":{\"text\":\"Configure the login image, logo, and brand colors here. Demo KPI data is only installed through an explicit operator command.\",\"col\":12}}]",
+  "creation": "2026-11-12 10:00:00",
+  "custom_blocks": [],
+  "docstatus": 0,
+  "doctype": "Workspace",
+  "for_user": "",
+  "hide_custom": 0,
+  "icon": "settings",
+  "idx": 0,
+  "is_hidden": 0,
+  "label": "Business Settings",
+  "links": [],
+  "modified": "2026-11-12 10:00:00",
+  "modified_by": "Administrator",
+  "module": "Bisness Core",
+  "name": "Business Settings",
+  "number_cards": [],
+  "owner": "Administrator",
+  "parent_page": "",
+  "public": 1,
+  "quick_lists": [],
+  "restrict_to_domain": "",
+  "roles": [
+    {
+      "role": "System Manager"
+    }
+  ],
+  "sequence_id": 1,
+  "shortcuts": [
+    {
+      "color": "Blue",
+      "doc_view": "",
+      "label": "Business Branding Settings",
+      "link_to": "Business Branding Settings",
+      "stats_filter": "",
+      "type": "DocType"
+    },
+    {
+      "color": "Green",
+      "label": "Demo Oil Gas KPI",
+      "link_to": "Demo Oil Gas KPI",
+      "type": "DocType"
+    }
+  ],
+  "standard": 1,
+  "title": "Business Settings",
+  "type": "Workspace"
+}
