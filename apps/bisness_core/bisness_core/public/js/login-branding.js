@@ -1,6 +1,8 @@
 /* Per-site branding on Frappe's native login. Never modify authentication. */
 (() => {
   "use strict";
+  // Website JS is global: do not observe unrelated pages indefinitely.
+  if (window.location.pathname !== "/login" && !document.querySelector("#page-login")) return;
   const endpoint = "/api/method/bisness_core.api.branding.get_login_branding";
 
   function publicAsset(url, version) {
