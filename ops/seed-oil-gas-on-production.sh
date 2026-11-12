@@ -5,8 +5,11 @@
 set -Eeuo pipefail
 umask 077
 
-SITE="armember.ir"
-COMPANY="[DEMO] Oil & Gas Operations"
+SITE="${DEMO_SITE_NAME:?Set DEMO_SITE_NAME to the Frappe site to seed}"
+COMPANY="${DEMO_COMPANY_NAME:?Set DEMO_COMPANY_NAME to the new [DEMO]-prefixed company}"
+[[ "$COMPANY" == "[DEMO] "* ]] || { echo "Refusing non-DEMO company" >&2; exit 2; }
+[[ "$SITE" =~ ^[A-Za-z0-9][A-Za-z0-9.-]*$ ]] || { echo "Invalid site name" >&2; exit 2; }
+PROJECT="${ERP_COMPOSE_PROJECT:-deploy}"
 DAYS=365
 [[ "${CONFIRM_DEMO_SEED_ON_LIVE_SITE:-}" == "YES" ]] || {
   echo "Refusing: set CONFIRM_DEMO_SEED_ON_LIVE_SITE=YES to acknowledge demo records in a shared live ERP site." >&2
@@ -19,23 +22,24 @@ for file in .env compose.yaml compose.production.yaml compose.ssl.yaml compose.l
 done
 
 # Preserve the current compose project and running application. No Docker up/down.
-export COMPOSE_PROJECT_NAME=deploy SITE_NAME="$SITE" HOST_HTTP_PORT=8080
+export COMPOSE_PROJECT_NAME="$PROJECT" SITE_NAME="$SITE" HOST_HTTP_PORT="${HOST_HTTP_PORT:-8080}"
 # Existing .env contains image references required for compose config expansion.
 set -a
 # shellcheck disable=SC1091
 source .env
 set +a
-export COMPOSE_PROJECT_NAME=deploy SITE_NAME="$SITE" HOST_HTTP_PORT=8080
+export COMPOSE_PROJECT_NAME="$PROJECT" SITE_NAME="$SITE" HOST_HTTP_PORT="${HOST_HTTP_PORT:-8080}"
 dc=(docker compose -f compose.yaml -f compose.production.yaml -f compose.ssl.yaml -f compose.low-memory.yaml -f compose.registry.yaml)
 "${dc[@]}" config --quiet
 "${dc[@]}" ps --status running --services | grep -qx backend || { echo "Backend is not running" >&2; exit 3; }
 "${dc[@]}" ps --status running --services | grep -qx db || { echo "Database is not running" >&2; exit 3; }
-docker inspect deploy-db-1 --format '{{.State.Health.Status}}' | grep -qx healthy || { echo "Database is not healthy" >&2; exit 3; }
+docker inspect "$("${dc[@]}" ps -q db)" --format '{{.State.Health.Status}}' | grep -qx healthy || { echo "Database is not healthy" >&2; exit 3; }
 
 # Do not create/modify existing companies, or use the default real company.
 # Operators must first provision an independent [DEMO]-prefixed company in ERPNext.
+company_args="$(python3 -c 'import json,os; print(json.dumps(["Company",os.environ["DEMO_COMPANY_NAME"]]))')"
 exists="$("${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.exists \
-  --args '["Company","[DEMO] Oil & Gas Operations"]')"
+  --args "$company_args")"
 if [[ "$exists" != *"$COMPANY"* ]]; then
   echo "Missing isolated company '$COMPANY'. No demo records were written." >&2
   echo "Create this separate demo company through ERPNext Setup before running the script." >&2
@@ -65,11 +69,13 @@ cleanup() {
 }
 trap cleanup EXIT
 "${dc[@]}" exec -T backend bench --site "$SITE" set-config enable_oil_gas_demo_seed 1
+seed_kwargs="$(python3 -c 'import json,os; print(json.dumps({"confirm":"SEED_OIL_GAS_DEMO","company":os.environ["DEMO_COMPANY_NAME"],"days":365}))')"
 "${dc[@]}" exec -T backend bench --site "$SITE" execute bisness_core.demo.seed.seed_demo \
-  --kwargs '{"confirm":"SEED_OIL_GAS_DEMO","company":"[DEMO] Oil & Gas Operations","days":365}'
+  --kwargs "$seed_kwargs"
 echo "Seed execution returned; inspecting DEMO KPI and Insights records..."
+kpi_args="$(python3 -c 'import json,os; print(json.dumps(["Demo Oil Gas KPI",{"company":os.environ["DEMO_COMPANY_NAME"]}]))')"
 kpi_count="$("${dc[@]}" exec -T backend bench --site "$SITE" execute frappe.db.count \
-  --args '["Demo Oil Gas KPI",{"company":"[DEMO] Oil & Gas Operations"}]')"
+  --args "$kpi_args")"
 echo "Demo KPI rows: $kpi_count"
 if [[ "$kpi_count" != "4380" ]]; then
   echo "Expected 4,380 demo KPI rows. Please inspect seed output; backup remains at $backup_dir." >&2
