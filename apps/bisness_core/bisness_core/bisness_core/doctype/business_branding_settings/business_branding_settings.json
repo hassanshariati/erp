@@ -1,6 +1,6 @@
 {
   "doctype": "DocType",
-  "name": "Bisness Branding Settings",
+  "name": "Business Branding Settings",
   "module": "Bisness Core",
   "issingle": 1,
   "custom": 0,
@@ -37,7 +37,7 @@
       "fieldname": "brand_logo",
       "fieldtype": "Attach Image",
       "label": "Brand Logo",
-      "description": "Upload a public PNG, JPEG, SVG, GIF or WebP. The logo also appears on the login form."
+      "description": "Public logo used in the login hero and login form. Save and refresh to see the result."
     },
     {
       "fieldname": "accent_color",
@@ -48,13 +48,13 @@
     {
       "fieldname": "animation_section",
       "fieldtype": "Section Break",
-      "label": "Animated Login Visual"
+      "label": "Login Image and Animation"
     },
     {
       "fieldname": "animation_file",
       "fieldtype": "Attach",
-      "label": "Animation File",
-      "description": "Upload a public animated GIF/WebP/SVG or a short MP4/WebM video. Video runs muted, looping and inline. Leave empty for the built-in moving-orbit animation."
+      "label": "Login Image or Animation",
+      "description": "Upload a PUBLIC PNG, JPEG, WebP, GIF, SVG, MP4 or WebM. The login hero updates after Save and refresh; private uploads cannot appear on the public login page."
     }
   ],
   "permissions": [
@@ -65,5 +65,6 @@
       "create": 1,
       "delete": 0
     }
-  ]
+  ],
+  "allow_rename": 0
 }

@@ -1,0 +1,35 @@
+name: Check Oil & Gas demo and branding changes
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/bisness_core/**"
+      - "tests/**"
+      - ".github/workflows/check-oil-gas-demo.yml"
+  push:
+    branches: [feat/oil-gas-demo-branding-insights-20261112]
+    paths:
+      - "apps/bisness_core/**"
+      - "tests/**"
+      - ".github/workflows/check-oil-gas-demo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract:
+    name: Python contract tests and browser syntax validation (no DB migrations)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Run existing and demo tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Parse all custom app Python modules
+        run: python3 -m compileall -q apps/bisness_core/bisness_core
+      - name: Validate login JavaScript syntax
+        run: node --check apps/bisness_core/bisness_core/public/js/login-branding.js
